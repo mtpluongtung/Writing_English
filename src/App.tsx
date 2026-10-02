@@ -230,6 +230,7 @@ export function App() {
               userText={userAnswer}
               hintTokenIndex={hintTokenIndex}
               cursorPos={cursorPos}
+              generatorType={currentSet.generatorType}
             />
           )}
 

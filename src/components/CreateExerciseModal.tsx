@@ -31,12 +31,23 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
   const [apiKey, setApiKey] = useState<string>(() => loadApiKey());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const apiKeyInputRef = React.useRef<HTMLInputElement | null>(null);
 
   if (!isOpen) return null;
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+
+    // Strict validation: if user selected Gemini, they MUST provide an API Key!
+    if (useGemini && !apiKey.trim()) {
+      setErrorMsg('Bạn đang chọn động cơ "Google Gemini API" nhưng chưa nhập API Key. Vui lòng dán API Key (AIzaSy...) bên dưới, hoặc chọn "⚡ AI Tức thì (Built-in)" để tạo bài ngay không cần Key.');
+      setTimeout(() => {
+        apiKeyInputRef.current?.focus();
+      }, 50);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -250,7 +261,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
 
               <button
                 type="button"
-                onClick={() => setUseGemini(true)}
+                onClick={() => {
+                  setUseGemini(true);
+                  setTimeout(() => apiKeyInputRef.current?.focus(), 80);
+                }}
                 className={`p-3 rounded-xl border text-xs text-left transition-all
                   ${useGemini 
                     ? 'bg-white border-emerald-600 text-emerald-950 shadow-sm ring-2 ring-emerald-500/20' 
@@ -259,7 +273,19 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
               >
                 <div className="font-extrabold flex items-center justify-between">
                   <span>✨ Google Gemini API</span>
-                  {useGemini && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                  {useGemini ? (
+                    apiKey.trim() ? (
+                      <span className="text-[10px] text-emerald-800 bg-emerald-100 font-bold px-1.5 py-0.5 rounded">
+                        ✓ Đã có Key
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-amber-800 bg-amber-100 font-bold px-1.5 py-0.5 rounded">
+                        ⚠️ Cần nhập Key
+                      </span>
+                    )
+                  ) : (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-slate-300" />
+                  )}
                 </div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
                   Sinh đề trực tiếp theo yêu cầu độc nhất từ Gemini 2.5 Flash.
@@ -268,22 +294,36 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
             </div>
 
             {useGemini && (
-              <div className="mt-2 space-y-1.5 animate-fadeIn">
-                <label className="block text-[11px] font-bold text-slate-600">
-                  Google Gemini API Key:
-                </label>
+              <div className="mt-2.5 p-3 bg-white rounded-xl border border-emerald-200 shadow-xs space-y-2 animate-fadeIn">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[11px] font-bold text-slate-700">
+                    Google Gemini API Key:
+                  </label>
+                  <a
+                    href="https://aistudio.google.com/apikey"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-emerald-700 hover:text-emerald-800 font-bold underline"
+                  >
+                    Lấy API Key miễn phí ↗
+                  </a>
+                </div>
                 <div className="relative">
                   <Key className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                   <input
+                    ref={apiKeyInputRef}
                     type="password"
-                    placeholder="Dán API Key (AIzaSy...)"
+                    placeholder="Dán API Key của bạn (AIzaSy...)"
                     value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none font-mono"
+                    onChange={(e) => {
+                      setApiKey(e.target.value);
+                      if (errorMsg) setErrorMsg(null);
+                    }}
+                    className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
                   />
                 </div>
-                <p className="text-[10px] text-slate-500">
-                  * API Key được lưu an toàn tại trình duyệt của bạn (localStorage).
+                <p className="text-[10px] text-slate-500 leading-normal">
+                  * API Key được lưu trực tiếp trên trình duyệt của bạn (localStorage). Nếu bạn chưa có Key, vui lòng chọn <strong>"⚡ AI Tức thì (Built-in)"</strong> ở trên để làm bài 10 câu chất lượng cao ngay lập tức.
                 </p>
               </div>
             )}

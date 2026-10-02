@@ -25,6 +25,7 @@ interface LeftPromptCardProps {
   userText: string;
   hintTokenIndex: number | null;
   cursorPos?: number;
+  generatorType?: 'gemini' | 'builtin';
 }
 
 export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
@@ -37,7 +38,8 @@ export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
   onTokenClick,
   userText,
   hintTokenIndex,
-  cursorPos
+  cursorPos,
+  generatorType
 }) => {
   const [showHints, setShowHints] = useState<boolean>(false);
   const [showAll, setShowAll] = useState<boolean>(false);
@@ -53,13 +55,22 @@ export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
       <div>
         {/* Top Badges */}
         <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-5">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">
               ĐỀ BÀI
             </span>
             <span className="bg-slate-100 text-slate-800 text-xs sm:text-sm font-bold px-3.5 py-1 rounded-full border border-slate-200">
               {topic}
             </span>
+            {generatorType === 'gemini' ? (
+              <span className="bg-emerald-100 text-emerald-950 border border-emerald-300 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs">
+                ✨ Gemini 2.5 Flash
+              </span>
+            ) : (
+              <span className="bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                ⚡ Đề Chuẩn IELTS
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-2">

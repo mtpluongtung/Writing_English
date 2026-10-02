@@ -40,6 +40,7 @@ export interface ExerciseSet {
   topicVi: string;
   band: number;
   createdAt: string;
+  generatorType?: 'gemini' | 'builtin';
   items: ExerciseItem[];
 }
 
