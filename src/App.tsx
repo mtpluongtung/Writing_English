@@ -199,6 +199,7 @@ export function App() {
     setActiveSetId(newSet.id);
     setCurrentIndex(0);
     setUserAnswer('');
+    setIsCreateModalOpen(false);
   };
 
   // Reset all to default sample sets
@@ -245,6 +246,28 @@ export function App() {
           setHintTokenIndex(null);
         }}
       />
+
+      {/* Fallback notification if Gemini API had an issue */}
+      {currentSet.fallbackNotice && (
+        <div className="max-w-[1850px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-4">
+          <div className="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-amber-900 text-xs shadow-xs animate-fadeIn">
+            <div className="flex items-center gap-2">
+              <span className="font-black text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded text-[11px] flex-shrink-0">
+                Thông báo AI Engine
+              </span>
+              <span>{currentSet.fallbackNotice}</span>
+            </div>
+            <button
+              onClick={() => {
+                setSets(prev => prev.map(s => s.id === currentSet.id ? { ...s, fallbackNotice: undefined } : s));
+              }}
+              className="text-amber-700 hover:text-amber-900 font-bold px-2 py-1 rounded hover:bg-amber-100 flex-shrink-0"
+            >
+              Đã hiểu ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Workspace (Split Screen 2 Columns with spacious cards) */}
       <main className="flex-1 max-w-[1850px] w-full mx-auto px-4 sm:px-6 lg:px-10 py-6">

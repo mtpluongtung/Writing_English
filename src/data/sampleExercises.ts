@@ -162,39 +162,32 @@ export interface GeminiModelOption {
 
 export const GEMINI_MODELS: GeminiModelOption[] = [
   {
-    id: 'gemini-2.5-flash',
-    name: 'Gemini 2.5 Flash',
-    tag: 'Khuyên dùng',
-    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    desc: 'Mới nhất, phản hồi siêu nhanh, tạo bài tập chuẩn xác nhất.'
-  },
-  {
-    id: 'gemini-2.5-pro',
-    name: 'Gemini 2.5 Pro',
-    tag: 'Tư duy sâu',
-    badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-    desc: 'Mô hình mạnh nhất của Google cho suy luận & thuật ngữ chuyên sâu.'
-  },
-  {
     id: 'gemini-2.0-flash',
     name: 'Gemini 2.0 Flash',
-    tag: 'Thế hệ 2.0',
-    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
-    desc: 'Thế hệ Flash 2.0 đa năng, độ trễ cực thấp.'
+    tag: 'Khuyên dùng (Mới nhất)',
+    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    desc: 'Mô hình thế hệ 2.0 mới nhất của Google, siêu nhanh & thông minh.'
   },
   {
     id: 'gemini-1.5-flash',
     name: 'Gemini 1.5 Flash',
-    tag: 'Ổn định',
-    badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
-    desc: 'Bản 1.5 nhẹ, hạn mức lượt gọi rộng, hoạt động ổn định.'
+    tag: 'Rất ổn định',
+    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
+    desc: 'Bản 1.5 Flash thông dụng nhất, độ trễ thấp, hạn mức gọi rộng.'
   },
   {
     id: 'gemini-1.5-pro',
     name: 'Gemini 1.5 Pro',
-    tag: 'Học thuật',
+    tag: 'Tư duy sâu',
+    badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+    desc: 'Mô hình 1.5 Pro lý luận sâu sắc, chuẩn văn phong học thuật cao cấp.'
+  },
+  {
+    id: 'gemini-2.0-flash-lite',
+    name: 'Gemini 2.0 Flash Lite',
+    tag: 'Siêu nhẹ',
     badgeClass: 'bg-purple-100 text-purple-800 border-purple-200',
-    desc: 'Bản 1.5 Pro chuyên sâu cho dịch thuật ngữ cảnh dài.'
+    desc: 'Bản Flash 2.0 rút gọn, tối ưu chi phí và tốc độ phản hồi.'
   }
 ];
 

@@ -42,6 +42,7 @@ export interface ExerciseSet {
   createdAt: string;
   generatorType?: 'gemini' | 'builtin';
   aiModel?: string;
+  fallbackNotice?: string;
   items: ExerciseItem[];
 }
 

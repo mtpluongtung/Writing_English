@@ -66,7 +66,7 @@ export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
             </span>
             {generatorType === 'gemini' ? (
               <span className="bg-emerald-100 text-emerald-950 border border-emerald-300 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs font-mono">
-                ✨ {aiModel || 'gemini-2.5-flash'}
+                ✨ {aiModel || 'gemini-2.0-flash'}
               </span>
             ) : (
               <span className="bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">

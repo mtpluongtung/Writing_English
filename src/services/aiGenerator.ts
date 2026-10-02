@@ -1319,7 +1319,10 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
   }
 ]`;
 
-  const selectedModel = options.geminiModel?.trim() || 'gemini-2.5-flash';
+  let selectedModel = options.geminiModel?.trim() || 'gemini-2.0-flash';
+  if (selectedModel.includes('2.5')) {
+    selectedModel = 'gemini-2.0-flash';
+  }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(selectedModel)}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
@@ -1407,14 +1410,22 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
 export async function createNewExerciseSet(options: GenerationOptions): Promise<ExerciseSet> {
   let items: ExerciseItem[];
   let generatorType: 'gemini' | 'builtin' = 'builtin';
+  let fallbackNotice: string | undefined = undefined;
 
   if (options.useGeminiApiKey) {
     if (!options.apiKey?.trim()) {
       throw new Error('Bạn đang chọn động cơ Google Gemini API nhưng chưa nhập API Key. Vui lòng nhập API Key để tạo đề trực tiếp với Gemini, hoặc chọn "⚡ AI Tức thì (Built-in)" để tạo ngay.');
     }
-    // Call Gemini directly. If it fails, throw the error directly to the user so they know what happened!
-    items = await generateWithGemini(options);
-    generatorType = 'gemini';
+    try {
+      items = await generateWithGemini(options);
+      generatorType = 'gemini';
+    } catch (geminiErr: any) {
+      console.warn('Lỗi gọi Gemini API, tự động kích hoạt Built-in AI fallback:', geminiErr);
+      // Auto-fallback to local AI so user never gets stuck!
+      items = generateLocalExercises(options);
+      generatorType = 'builtin';
+      fallbackNotice = `Không thể kết nối Gemini API (${geminiErr.message || 'Lỗi kết nối'}). Hệ thống đã tự động tạo bài tập bằng AI tích hợp sẵn để bạn học ngay!`;
+    }
   } else {
     // Artificial small delay to simulate generation feel
     await new Promise((resolve) => setTimeout(resolve, 600));
@@ -1424,9 +1435,9 @@ export async function createNewExerciseSet(options: GenerationOptions): Promise<
 
   const topicName = options.customTopic?.trim() || options.topic;
   const topicViName = options.customTopic?.trim() || options.topicVi || options.topic;
-  const aiModel = options.useGeminiApiKey 
-    ? (options.geminiModel?.trim() || 'gemini-2.5-flash') 
-    : undefined;
+  const rawModel = options.geminiModel?.trim() || 'gemini-2.0-flash';
+  const cleanModel = rawModel.includes('2.5') ? 'gemini-2.0-flash' : rawModel;
+  const aiModel = generatorType === 'gemini' ? cleanModel : undefined;
 
   return {
     id: `set-${Date.now()}`,
@@ -1437,6 +1448,7 @@ export async function createNewExerciseSet(options: GenerationOptions): Promise<
     createdAt: new Date().toISOString(),
     generatorType,
     aiModel,
+    fallbackNotice,
     items: items
   };
 }

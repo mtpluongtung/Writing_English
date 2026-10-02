@@ -60,8 +60,9 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
       if (useGemini && apiKey.trim()) {
         saveApiKey(apiKey.trim());
       }
-      if (useGemini && geminiModel.trim()) {
-        saveGeminiModel(geminiModel.trim());
+      const cleanModel = (geminiModel.trim().includes('2.5') ? 'gemini-2.0-flash' : geminiModel.trim()) || 'gemini-2.0-flash';
+      if (useGemini && cleanModel) {
+        saveGeminiModel(cleanModel);
       }
 
       const preset = PRESET_TOPICS.find(p => p.id === selectedTopic);
@@ -72,7 +73,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
         band: selectedBand,
         sentenceCount: sentenceCount,
         exerciseFormat: exerciseFormat,
-        geminiModel: useGemini ? (geminiModel.trim() || 'gemini-2.5-flash') : undefined,
+        geminiModel: useGemini ? cleanModel : undefined,
         customTopic: customTopic.trim() ? customTopic.trim() : undefined,
         useGeminiApiKey: useGemini,
         apiKey: useGemini ? apiKey.trim() : undefined

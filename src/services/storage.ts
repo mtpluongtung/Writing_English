@@ -50,10 +50,16 @@ export function saveApiKey(key: string): void {
 }
 
 export function loadGeminiModel(): string {
-  return localStorage.getItem(STORAGE_KEYS.GEMINI_MODEL) || 'gemini-2.5-flash';
+  const saved = localStorage.getItem(STORAGE_KEYS.GEMINI_MODEL);
+  if (!saved || saved.includes('2.5')) {
+    return 'gemini-2.0-flash';
+  }
+  return saved;
 }
 
 export function saveGeminiModel(model: string): void {
-  localStorage.setItem(STORAGE_KEYS.GEMINI_MODEL, model.trim());
+  const clean = model.trim();
+  const valid = clean.includes('2.5') ? 'gemini-2.0-flash' : clean;
+  localStorage.setItem(STORAGE_KEYS.GEMINI_MODEL, valid);
 }
 
