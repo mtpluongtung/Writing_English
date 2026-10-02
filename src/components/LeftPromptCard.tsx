@@ -26,6 +26,7 @@ interface LeftPromptCardProps {
   hintTokenIndex: number | null;
   cursorPos?: number;
   generatorType?: 'gemini' | 'builtin';
+  aiModel?: string;
 }
 
 export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
@@ -39,7 +40,8 @@ export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
   userText,
   hintTokenIndex,
   cursorPos,
-  generatorType
+  generatorType,
+  aiModel
 }) => {
   const [showHints, setShowHints] = useState<boolean>(false);
   const [showAll, setShowAll] = useState<boolean>(false);
@@ -63,8 +65,8 @@ export const LeftPromptCard: React.FC<LeftPromptCardProps> = ({
               {topic}
             </span>
             {generatorType === 'gemini' ? (
-              <span className="bg-emerald-100 text-emerald-950 border border-emerald-300 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs">
-                ✨ Gemini 2.5 Flash
+              <span className="bg-emerald-100 text-emerald-950 border border-emerald-300 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs font-mono">
+                ✨ {aiModel || 'gemini-2.5-flash'}
               </span>
             ) : (
               <span className="bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">

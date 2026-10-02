@@ -151,3 +151,50 @@ export const BAND_OPTIONS = [
   { value: 8.5, label: 'Band 8.5', desc: 'Tự nhiên như bản ngữ, danh từ hóa chuẩn xác' },
   { value: 9.0, label: 'Band 9.0', desc: 'Đỉnh cao học thuật, uyển chuyển tuyệt đối' },
 ];
+
+export interface GeminiModelOption {
+  id: string;
+  name: string;
+  tag: string;
+  badgeClass: string;
+  desc: string;
+}
+
+export const GEMINI_MODELS: GeminiModelOption[] = [
+  {
+    id: 'gemini-2.5-flash',
+    name: 'Gemini 2.5 Flash',
+    tag: 'Khuyên dùng',
+    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    desc: 'Mới nhất, phản hồi siêu nhanh, tạo bài tập chuẩn xác nhất.'
+  },
+  {
+    id: 'gemini-2.5-pro',
+    name: 'Gemini 2.5 Pro',
+    tag: 'Tư duy sâu',
+    badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+    desc: 'Mô hình mạnh nhất của Google cho suy luận & thuật ngữ chuyên sâu.'
+  },
+  {
+    id: 'gemini-2.0-flash',
+    name: 'Gemini 2.0 Flash',
+    tag: 'Thế hệ 2.0',
+    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
+    desc: 'Thế hệ Flash 2.0 đa năng, độ trễ cực thấp.'
+  },
+  {
+    id: 'gemini-1.5-flash',
+    name: 'Gemini 1.5 Flash',
+    tag: 'Ổn định',
+    badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+    desc: 'Bản 1.5 nhẹ, hạn mức lượt gọi rộng, hoạt động ổn định.'
+  },
+  {
+    id: 'gemini-1.5-pro',
+    name: 'Gemini 1.5 Pro',
+    tag: 'Học thuật',
+    badgeClass: 'bg-purple-100 text-purple-800 border-purple-200',
+    desc: 'Bản 1.5 Pro chuyên sâu cho dịch thuật ngữ cảnh dài.'
+  }
+];
+

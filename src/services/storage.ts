@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
   EXERCISE_SETS: 'ielts_translate_sets_v1',
   ACTIVE_SET_ID: 'ielts_translate_active_set_id',
   API_KEY: 'ielts_gemini_api_key',
+  GEMINI_MODEL: 'ielts_gemini_model',
   FONT_PREFERENCE: 'ielts_font_preference',
 };
 
@@ -47,3 +48,12 @@ export function loadApiKey(): string {
 export function saveApiKey(key: string): void {
   localStorage.setItem(STORAGE_KEYS.API_KEY, key.trim());
 }
+
+export function loadGeminiModel(): string {
+  return localStorage.getItem(STORAGE_KEYS.GEMINI_MODEL) || 'gemini-2.5-flash';
+}
+
+export function saveGeminiModel(model: string): void {
+  localStorage.setItem(STORAGE_KEYS.GEMINI_MODEL, model.trim());
+}
+

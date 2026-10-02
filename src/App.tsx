@@ -231,6 +231,7 @@ export function App() {
               hintTokenIndex={hintTokenIndex}
               cursorPos={cursorPos}
               generatorType={currentSet.generatorType}
+              aiModel={currentSet.aiModel}
             />
           )}
 

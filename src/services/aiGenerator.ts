@@ -1319,7 +1319,8 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
   }
 ]`;
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const selectedModel = options.geminiModel?.trim() || 'gemini-2.5-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(selectedModel)}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -1423,6 +1424,9 @@ export async function createNewExerciseSet(options: GenerationOptions): Promise<
 
   const topicName = options.customTopic?.trim() || options.topic;
   const topicViName = options.customTopic?.trim() || options.topicVi || options.topic;
+  const aiModel = options.useGeminiApiKey 
+    ? (options.geminiModel?.trim() || 'gemini-2.5-flash') 
+    : undefined;
 
   return {
     id: `set-${Date.now()}`,
@@ -1432,6 +1436,7 @@ export async function createNewExerciseSet(options: GenerationOptions): Promise<
     band: options.band,
     createdAt: new Date().toISOString(),
     generatorType,
+    aiModel,
     items: items
   };
 }

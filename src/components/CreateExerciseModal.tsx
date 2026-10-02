@@ -7,10 +7,10 @@ import {
   Loader2, 
   CheckCircle2
 } from 'lucide-react';
-import { PRESET_TOPICS, BAND_OPTIONS } from '../data/sampleExercises';
+import { PRESET_TOPICS, BAND_OPTIONS, GEMINI_MODELS } from '../data/sampleExercises';
 import type { GenerationOptions, ExerciseSet } from '../types';
 import { createNewExerciseSet } from '../services/aiGenerator';
-import { saveApiKey, loadApiKey } from '../services/storage';
+import { saveApiKey, loadApiKey, loadGeminiModel, saveGeminiModel } from '../services/storage';
 
 interface CreateExerciseModalProps {
   isOpen: boolean;
@@ -30,6 +30,11 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
   const [exerciseFormat, setExerciseFormat] = useState<'statement' | 'question' | 'answer' | 'qa_pair'>('qa_pair');
   const [useGemini, setUseGemini] = useState<boolean>(false);
   const [apiKey, setApiKey] = useState<string>(() => loadApiKey());
+  const [geminiModel, setGeminiModel] = useState<string>(() => loadGeminiModel());
+  const [isCustomModel, setIsCustomModel] = useState<boolean>(() => {
+    const saved = loadGeminiModel();
+    return !GEMINI_MODELS.some(m => m.id === saved);
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const apiKeyInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -55,6 +60,9 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
       if (useGemini && apiKey.trim()) {
         saveApiKey(apiKey.trim());
       }
+      if (useGemini && geminiModel.trim()) {
+        saveGeminiModel(geminiModel.trim());
+      }
 
       const preset = PRESET_TOPICS.find(p => p.id === selectedTopic);
 
@@ -64,6 +72,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
         band: selectedBand,
         sentenceCount: sentenceCount,
         exerciseFormat: exerciseFormat,
+        geminiModel: useGemini ? (geminiModel.trim() || 'gemini-2.5-flash') : undefined,
         customTopic: customTopic.trim() ? customTopic.trim() : undefined,
         useGeminiApiKey: useGemini,
         apiKey: useGemini ? apiKey.trim() : undefined
@@ -359,42 +368,127 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                   )}
                 </div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Sinh đề trực tiếp theo yêu cầu độc nhất từ Gemini 2.5 Flash.
+                  Sinh đề trực tiếp theo yêu cầu độc nhất từ Google Gemini AI.
                 </p>
               </button>
             </div>
 
             {useGemini && (
-              <div className="mt-2.5 p-3 bg-white rounded-xl border border-emerald-200 shadow-xs space-y-2 animate-fadeIn">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-bold text-slate-700">
-                    Google Gemini API Key:
-                  </label>
-                  <a
-                    href="https://aistudio.google.com/apikey"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[10px] text-emerald-700 hover:text-emerald-800 font-bold underline"
-                  >
-                    Lấy API Key miễn phí ↗
-                  </a>
+              <div className="mt-2.5 p-3.5 bg-white rounded-xl border border-emerald-200 shadow-xs space-y-3.5 animate-fadeIn">
+                {/* 1. API Key Input */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[11px] font-bold text-slate-700">
+                      Google Gemini API Key:
+                    </label>
+                    <a
+                      href="https://aistudio.google.com/apikey"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] text-emerald-700 hover:text-emerald-800 font-bold underline"
+                    >
+                      Lấy API Key miễn phí ↗
+                    </a>
+                  </div>
+                  <div className="relative">
+                    <Key className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                    <input
+                      ref={apiKeyInputRef}
+                      type="password"
+                      placeholder="Dán API Key của bạn (AIzaSy...)"
+                      value={apiKey}
+                      onChange={(e) => {
+                        setApiKey(e.target.value);
+                        if (errorMsg) setErrorMsg(null);
+                      }}
+                      className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
+                    />
+                  </div>
                 </div>
-                <div className="relative">
-                  <Key className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    ref={apiKeyInputRef}
-                    type="password"
-                    placeholder="Dán API Key của bạn (AIzaSy...)"
-                    value={apiKey}
-                    onChange={(e) => {
-                      setApiKey(e.target.value);
-                      if (errorMsg) setErrorMsg(null);
-                    }}
-                    className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
-                  />
+
+                {/* 2. Model Selection */}
+                <div className="pt-2 border-t border-slate-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-[11px] font-bold text-slate-700">
+                      Chọn phiên bản Gemini Model:
+                    </label>
+                    <span className="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      {geminiModel}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {GEMINI_MODELS.map((m) => {
+                      const isChosen = geminiModel === m.id && !isCustomModel;
+                      return (
+                        <button
+                          type="button"
+                          key={m.id}
+                          onClick={() => {
+                            setGeminiModel(m.id);
+                            setIsCustomModel(false);
+                            saveGeminiModel(m.id);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between
+                            ${isChosen
+                              ? 'bg-emerald-50 border-emerald-600 text-emerald-950 shadow-2xs ring-1 ring-emerald-500/20'
+                              : 'bg-slate-50/60 border-slate-200 text-slate-700 hover:bg-white'
+                            }`}
+                        >
+                          <div className="flex items-center justify-between w-full mb-1">
+                            <span className="text-[11px] font-bold">{m.name}</span>
+                            <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${m.badgeClass}`}>
+                              {m.tag}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-500 leading-tight">
+                            {m.desc}
+                          </p>
+                        </button>
+                      );
+                    })}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomModel(true);
+                      }}
+                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between
+                        ${isCustomModel
+                          ? 'bg-emerald-50 border-emerald-600 text-emerald-950 shadow-2xs ring-1 ring-emerald-500/20'
+                          : 'bg-slate-50/60 border-slate-200 text-slate-700 hover:bg-white'
+                        }`}
+                    >
+                      <div className="flex items-center justify-between w-full mb-1">
+                        <span className="text-[11px] font-bold">Model khác (Tùy chỉnh)</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                          Custom
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 leading-tight">
+                        Tự nhập ID model mới (VD: gemini-2.0-flash-lite)
+                      </p>
+                    </button>
+                  </div>
+
+                  {isCustomModel && (
+                    <div className="mt-2.5">
+                      <input
+                        type="text"
+                        placeholder="Nhập tên model ID (ví dụ: gemini-2.0-flash-lite, gemini-exp-1206...)"
+                        value={geminiModel}
+                        onChange={(e) => {
+                          setGeminiModel(e.target.value);
+                          saveGeminiModel(e.target.value);
+                        }}
+                        className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
+                      />
+                    </div>
+                  )}
                 </div>
-                <p className="text-[10px] text-slate-500 leading-normal">
-                  * API Key được lưu trực tiếp trên trình duyệt của bạn (localStorage). Nếu bạn chưa có Key, vui lòng chọn <strong>"⚡ AI Tức thì (Built-in)"</strong> ở trên để làm bài 10 câu chất lượng cao ngay lập tức.
+
+                <p className="text-[10px] text-slate-500 leading-normal pt-1 border-t border-slate-100">
+                  * API Key và cấu hình Model được lưu an toàn trên trình duyệt của bạn (localStorage).
                 </p>
               </div>
             )}

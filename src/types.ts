@@ -41,6 +41,7 @@ export interface ExerciseSet {
   band: number;
   createdAt: string;
   generatorType?: 'gemini' | 'builtin';
+  aiModel?: string;
   items: ExerciseItem[];
 }
 
@@ -52,5 +53,7 @@ export interface GenerationOptions {
   customTopic?: string;
   useGeminiApiKey?: boolean;
   apiKey?: string;
+  geminiModel?: string;
   exerciseFormat?: 'statement' | 'question' | 'answer' | 'qa_pair';
 }
+

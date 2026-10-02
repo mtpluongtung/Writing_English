@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Key, ShieldCheck, RefreshCw, Check } from 'lucide-react';
-import { saveApiKey, loadApiKey } from '../services/storage';
+import { X, Key, ShieldCheck, RefreshCw, Check, Cpu } from 'lucide-react';
+import { saveApiKey, loadApiKey, loadGeminiModel, saveGeminiModel } from '../services/storage';
+import { GEMINI_MODELS } from '../data/sampleExercises';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onResetAllData
 }) => {
   const [apiKey, setApiKey] = useState<string>(() => loadApiKey());
+  const [geminiModel, setGeminiModel] = useState<string>(() => loadGeminiModel());
   const [saved, setSaved] = useState<boolean>(false);
 
   if (!isOpen) return null;
@@ -21,6 +23,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     saveApiKey(apiKey.trim());
+    if (geminiModel.trim()) {
+      saveGeminiModel(geminiModel.trim());
+    }
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
@@ -67,6 +72,29 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             />
             <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
               * Khóa API được lưu cục bộ trên trình duyệt của bạn (localStorage) và chỉ được dùng để gọi trực tiếp tới Google Gemini API để tạo bài tập.
+            </p>
+          </div>
+
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <Cpu className="w-4 h-4 text-emerald-700" />
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-600">
+                Phiên bản Gemini Model mặc định
+              </label>
+            </div>
+            <select
+              value={geminiModel}
+              onChange={(e) => setGeminiModel(e.target.value)}
+              className="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-medium bg-white text-slate-800"
+            >
+              {GEMINI_MODELS.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name} ({m.tag}) - {m.desc}
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
+              * Model này sẽ tự động được chọn làm mặc định khi bạn tạo bài tập mới.
             </p>
           </div>
 
