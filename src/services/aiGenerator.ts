@@ -238,6 +238,114 @@ const TOPIC_TEMPLATES: Record<string, Array<{
       band: 8.5
     }
   ],
+  Programming_QA: [
+    {
+      vi: 'Hỏi: Bạn có thể giải thích nguyên lý Dependency Injection trong .NET không? Đáp: Dependency Injection giúp tách rời sự phụ thuộc trực tiếp giữa các module và tăng khả năng kiểm thử đơn vị.',
+      en: 'Q: Can you explain the Dependency Injection principle in .NET? A: Dependency Injection decouples direct dependencies between modules and significantly improves unit testability.',
+      vocab: [
+        { word: 'Dependency Injection', meaning: 'tiêm phụ thuộc (DI)', type: 'Pattern' },
+        { word: 'decouples dependencies', meaning: 'tách rời sự phụ thuộc', type: 'Collocation' },
+        { word: 'unit testability', meaning: 'khả năng kiểm thử đơn vị', type: 'Technical Term' }
+      ],
+      grammar: ['Cặp câu hỏi và trả lời phỏng vấn (Q&A format)', 'Hiện tại đơn'],
+      band: 7.5
+    },
+    {
+      vi: 'Hỏi: Cơ chế Garbage Collection trong .NET hoạt động như thế nào? Đáp: Garbage Collection tự động thu hồi bộ nhớ không còn tham chiếu để ngăn ngừa hiện tượng rò rỉ bộ nhớ.',
+      en: 'Q: How does the Garbage Collection mechanism work in .NET? A: Garbage Collection automatically reclaims unreferenced memory to effectively prevent memory leaks.',
+      vocab: [
+        { word: 'Garbage Collection', meaning: 'bộ thu gom rác bộ nhớ', type: 'Technical Term' },
+        { word: 'reclaims memory', meaning: 'thu hồi bộ nhớ', type: 'Collocation' },
+        { word: 'memory leaks', meaning: 'rò rỉ bộ nhớ', type: 'Technical Term' }
+      ],
+      grammar: ['Wh-question kết hợp câu trả lời giải thích', 'Mệnh đề chỉ mục đích: "to effectively prevent..."'],
+      band: 8.0
+    },
+    {
+      vi: 'Hỏi: Tại sao nên sử dụng async và await trong C#? Đáp: Lập trình bất đồng bộ cho phép ứng dụng xử lý dữ liệu mà không làm nghẽn luồng giao diện chính.',
+      en: 'Q: Why should we use async and await in C#? A: Asynchronous programming enables applications to process data without blocking the primary user interface thread.',
+      vocab: [
+        { word: 'Asynchronous programming', meaning: 'lập trình bất đồng bộ', type: 'Technical Term' },
+        { word: 'blocking the primary thread', meaning: 'làm nghẽn luồng xử lý chính', type: 'Collocation' }
+      ],
+      grammar: ['Câu hỏi modal verb Why should we...?', 'Cấu trúc: "enable someone to do something without doing something"'],
+      band: 8.0
+    },
+    {
+      vi: 'Hỏi: Sự khác biệt giữa Interface và Abstract Class là gì? Đáp: Interface chỉ định nghĩa chữ ký phương thức, trong khi Abstract Class có thể chứa cả triển khai cụ thể.',
+      en: 'Q: What is the difference between an Interface and an Abstract Class? A: An Interface only defines method signatures, whereas an Abstract Class can contain concrete implementations.',
+      vocab: [
+        { word: 'method signatures', meaning: 'chữ ký phương thức', type: 'Technical Term' },
+        { word: 'whereas', meaning: 'trong khi đó (liên từ đối lập)', type: 'Conjunction' },
+        { word: 'concrete implementations', meaning: 'các triển khai cụ thể', type: 'Collocation' }
+      ],
+      grammar: ['Liên từ đối lập: "whereas..."', 'Wh-question'],
+      band: 8.0
+    },
+    {
+      vi: 'Hỏi: Làm thế nào để tối ưu hiệu năng Entity Framework Core? Đáp: Chúng ta nên sử dụng AsNoTracking cho các truy vấn chỉ đọc và đánh chỉ mục hợp lý.',
+      en: 'Q: How do you optimize Entity Framework Core performance? A: We should utilize AsNoTracking for read-only queries and implement proper database indexing.',
+      vocab: [
+        { word: 'AsNoTracking', meaning: 'phương thức vô hiệu hóa change tracking trong EF', type: 'Technical Method' },
+        { word: 'read-only queries', meaning: 'các truy vấn chỉ đọc', type: 'Noun phrase' },
+        { word: 'database indexing', meaning: 'đánh chỉ mục cơ sở dữ liệu', type: 'Collocation' }
+      ],
+      grammar: ['Modal verb chỉ khuyến nghị: "should utilize..."', 'Wh-question'],
+      band: 8.0
+    },
+    {
+      vi: 'Hỏi: Sự khác nhau giữa IEnumerable và IQueryable là gì? Đáp: IEnumerable lọc dữ liệu phía client, trong khi IQueryable thực thi truy vấn phía máy chủ cơ sở dữ liệu.',
+      en: 'Q: What is the difference between IEnumerable and IQueryable? A: IEnumerable filters data in-memory on the client, whereas IQueryable executes queries directly on the database server.',
+      vocab: [
+        { word: 'filters data in-memory', meaning: 'lọc dữ liệu trong bộ nhớ', type: 'Technical Phrase' },
+        { word: 'executes queries directly', meaning: 'thực thi truy vấn trực tiếp', type: 'Collocation' }
+      ],
+      grammar: ['Cấu trúc so sánh đối lập với whereas', 'Wh-question'],
+      band: 8.5
+    },
+    {
+      vi: 'Hỏi: Middleware trong ASP.NET Core đóng vai trò gì? Đáp: Middleware tạo thành đường ống xử lý tuần tự các yêu cầu HTTP đến và phản hồi trả về.',
+      en: 'Q: What is the role of Middleware in ASP.NET Core? A: Middleware forms a sequential pipeline to process incoming HTTP requests and outgoing responses.',
+      vocab: [
+        { word: 'sequential pipeline', meaning: 'đường ống xử lý tuần tự', type: 'Architecture Term' },
+        { word: 'incoming HTTP requests', meaning: 'các yêu cầu HTTP gửi đến', type: 'Collocation' }
+      ],
+      grammar: ['Wh-question với What is the role of...?', 'Hiện tại đơn'],
+      band: 8.0
+    },
+    {
+      vi: 'Hỏi: Tại sao cần giải phóng tài nguyên với IDisposable? Đáp: IDisposable đảm bảo các tài nguyên unmanaged như file handle và kết nối cơ sở dữ liệu được giải phóng kịp thời.',
+      en: 'Q: Why do we need to release resources with IDisposable? A: IDisposable ensures that unmanaged resources such as file handles and database connections are promptly released.',
+      vocab: [
+        { word: 'unmanaged resources', meaning: 'tài nguyên không được quản lý tự động', type: 'Technical Term' },
+        { word: 'promptly released', meaning: 'được giải phóng kịp thời', type: 'Collocation' }
+      ],
+      grammar: ['Bị động ở thì hiện tại đơn: "are promptly released"', 'Wh-question'],
+      band: 8.5
+    },
+    {
+      vi: 'Hỏi: Làm thế nào để giảm tải cơ sở dữ liệu với Redis? Đáp: Chúng ta lưu các dữ liệu thường xuyên truy xuất vào Redis cache phân tán để giảm thời gian phản hồi.',
+      en: 'Q: How do you reduce database load using Redis? A: We store frequently accessed data in a distributed Redis cache to significantly diminish response times.',
+      vocab: [
+        { word: 'frequently accessed data', meaning: 'dữ liệu thường xuyên được truy cập', type: 'Collocation' },
+        { word: 'distributed Redis cache', meaning: 'bộ nhớ đệm Redis phân tán', type: 'Technical Phrase' },
+        { word: 'diminish response times', meaning: 'giảm thời gian phản hồi', type: 'Collocation' }
+      ],
+      grammar: ['Mệnh đề phân từ chỉ phương thức: "using Redis"', 'Mệnh đề chỉ mục đích: "to significantly diminish..."'],
+      band: 8.5
+    },
+    {
+      vi: 'Hỏi: Khi nào nên chuyển từ Monolith sang Microservices? Đáp: Chỉ nên chuyển đổi khi hệ thống đủ lớn và các đội ngũ cần phát triển, mở rộng các dịch vụ độc lập.',
+      en: 'Q: When should an enterprise migrate from a Monolith to Microservices? A: Transitioning is only recommended when system complexity grows and multidisciplinary teams require independent service scalability.',
+      vocab: [
+        { word: 'Transitioning', meaning: 'việc chuyển đổi', type: 'Gerund' },
+        { word: 'system complexity', meaning: 'độ phức tạp của hệ thống', type: 'Collocation' },
+        { word: 'service scalability', meaning: 'khả năng mở rộng quy mô dịch vụ', type: 'Technical Phrase' }
+      ],
+      grammar: ['Bị động với recommended: "is only recommended when..."', 'Wh-question với When should...'],
+      band: 8.5
+    }
+  ],
   Environment: [
     {
       vi: 'Sự gia tăng nhiệt độ toàn cầu đang đẩy nhanh tốc độ tan chảy của các tảng băng ở hai cực, gây ra nguy cơ ngập lụt nghiêm trọng cho các đô thị ven biển.',
@@ -1079,7 +1187,14 @@ function generateLocalExercises(options: GenerationOptions): ExerciseItem[] {
     topicKey = 'Crime';
   }
 
-  const templates = TOPIC_TEMPLATES[topicKey] || TOPIC_TEMPLATES['Technology'];
+  const isQAPair = options.exerciseFormat === 'qa_pair' || 
+    /cả\s*câu\s*hỏi\s*(và|lẫn)\s*câu\s*trả\s*lời|cả\s*hỏi\s*và\s*đáp|câu\s*hỏi\s*và\s*câu\s*trả\s*lời|hỏi\s*đáp|q&a|interview\s*q&a/i.test(customLower);
+
+  let templates = TOPIC_TEMPLATES[topicKey] || TOPIC_TEMPLATES['Technology'];
+  if (isQAPair && (topicKey === 'Programming' || customLower.includes('.net') || customLower.includes('c#'))) {
+    templates = TOPIC_TEMPLATES['Programming_QA'] || templates;
+  }
+
   const targetBand = options.band || 7.5;
   
   // RESPECT THE EXACT SENTENCE COUNT (no clamp to 5!)
@@ -1136,28 +1251,50 @@ async function generateWithGemini(options: GenerationOptions): Promise<ExerciseI
   const band = options.band || 7.5;
   const count = options.sentenceCount || 3;
 
-  // Detect if user is asking for questions, interview questions, or Q&A
-  const isQuestionRequest = /câu\s*hỏi|phỏng\s*vấn|interview|question|q&a|hỏi\s*đáp|đố|test/i.test(topicPrompt);
+  // Detect if user is asking for Q&A pairs, questions only, or answers only
+  const isQAPairRequest = options.exerciseFormat === 'qa_pair' ||
+    /cả\s*câu\s*hỏi\s*(và|lẫn)\s*câu\s*trả\s*lời|cả\s*hỏi\s*và\s*đáp|câu\s*hỏi\s*và\s*câu\s*trả\s*lời|hỏi\s*đáp|q&a|interview\s*q&a/i.test(topicPrompt);
+  const isQuestionOnly = !isQAPairRequest && (options.exerciseFormat === 'question' || /câu\s*hỏi|question/i.test(topicPrompt));
+  const isAnswerOnly = !isQAPairRequest && (options.exerciseFormat === 'answer' || /câu\s*trả\s*lời|câu\s*đáp|answer/i.test(topicPrompt));
 
-  const genreGuideline = isQuestionRequest
-    ? `BẠN LÀ CHUYÊN GIA PHỎNG VẤN TUYỂN DỤNG KỸ THUẬT VÀ KHẢO THÍ TIẾNG ANH CHUYÊN NGÀNH HÀNG ĐẦU.
+  let genreGuideline = '';
+  if (isQAPairRequest) {
+    genreGuideline = `BẠN LÀ CHUYÊN GIA PHỎNG VẤN TUYỂN DỤNG KỸ THUẬT VÀ KHẢO THÍ TIẾNG ANH CHUYÊN NGÀNH HÀNG ĐẦU.
+Người dùng yêu cầu cụ thể: Tạo "CẶP CÂU HỎI VÀ CÂU TRẢ LỜI PHỎNG VẤN" (Interview Q&A Pair) theo chủ đề: "${topicPrompt}".
+
+QUY TẮC BẮT BUỘC VỀ ĐỊNH DẠNG (Q&A FORMAT):
+1. Mỗi bài tập BẮT BUỘC PHẢI BAO GỒM CẢ CÂU HỎI CỦA NGƯỜI PHỎNG VẤN VÀ CÂU TRẢ LỜI MẪU CỦA ỨNG VIÊN!
+2. Định dạng chuẩn xác:
+   - Câu tiếng Việt: "Hỏi: [Câu hỏi phỏng vấn]? Đáp: [Câu trả lời chuyên nghiệp, súc tích, chuẩn kỹ thuật]."
+   - Câu tiếng Anh: "Q: [Interview Question]? A: [Model Professional Answer]."
+3. Ví dụ mẫu:
+   - vi: "Hỏi: Bạn có thể giải thích nguyên lý Dependency Injection trong .NET không? Đáp: Dependency Injection giúp tách rời sự phụ thuộc trực tiếp giữa các module và tăng khả năng kiểm thử đơn vị."
+   - en: "Q: Can you explain the Dependency Injection principle in .NET? A: Dependency Injection decouples direct dependencies between modules and significantly improves unit testability."
+4. Câu hỏi và câu trả lời phải ăn khớp tuyệt đối, câu trả lời giải đáp đúng trọng tâm câu hỏi, sử dụng thuật ngữ chuyên môn chính xác.`;
+  } else if (isQuestionOnly) {
+    genreGuideline = `BẠN LÀ CHUYÊN GIA PHỎNG VẤN TUYỂN DỤNG KỸ THUẬT VÀ KHẢO THÍ TIẾNG ANH CHUYÊN NGÀNH HÀNG ĐẦU.
 Người dùng yêu cầu cụ thể: Tạo "CÂU HỎI PHỎNG VẤN" (Interview Questions) theo chủ đề: "${topicPrompt}".
 
-QUY TẮC BẮT BUỘC VỀ DẠNG CÂU:
+QUY TẮC BẮT BUỘC:
 1. TẤT CẢ các câu tiếng Việt và câu tiếng Anh BẮT BUỘC PHẢI Ở DẠNG CÂU HỎI PHỎNG VẤN TRỰC TIẾP (kết thúc bằng dấu chấm hỏi '?').
 2. TUYỆT ĐỐI KHÔNG sinh ra câu khẳng định, câu trần thuật hay đoạn văn nghị luận kiểu IELTS Task 2! Mỗi câu phải là một câu hỏi mà người phỏng vấn / nhà tuyển dụng trực tiếp hỏi ứng viên!
-3. Ví dụ câu hỏi mẫu chuẩn:
-   - "Bạn có thể giải thích sự khác biệt cốt lõi giữa Interface và Abstract Class trong C# không?" -> "Can you explain the fundamental distinction between an Interface and an Abstract Class in C#?"
-   - "Cơ chế Garbage Collection trong .NET hoạt động như thế nào để ngăn ngừa rò rỉ bộ nhớ?" -> "How does the Garbage Collection mechanism automatically reclaim unreferenced memory in .NET applications?"
-   - "Làm thế nào để bạn chẩn đoán và khắc phục điểm nghẽn hiệu năng khi truy vấn dữ liệu lớn với Entity Framework?" -> "How do you diagnose and resolve performance bottlenecks when querying large datasets using Entity Framework Core?"
-4. Nội dung câu hỏi phải chuyên sâu, tập trung đúng vào kỹ thuật/chuyên môn được yêu cầu.`
-    : `BẠN LÀ CHUYÊN GIA BIÊN SOẠN ĐỀ THI TIẾNG ANH CHUYÊN NGÀNH VÀ IELTS HỌC THUẬT HÀNG ĐẦU.
+3. Ví dụ:
+   - vi: "Bạn có thể giải thích sự khác biệt cốt lõi giữa Interface và Abstract Class trong C# không?"
+   - en: "Can you explain the fundamental distinction between an Interface and an Abstract Class in C#?"
+4. Nội dung câu hỏi phải chuyên sâu, tập trung đúng vào kỹ thuật/chuyên môn được yêu cầu.`;
+  } else if (isAnswerOnly) {
+    genreGuideline = `BẠN LÀ CHUYÊN GIA TƯ VẤN TRẢ LỜI PHỎNG VẤN CHUYÊN NGÀNH.
+Người dùng yêu cầu cụ thể: Tạo "CÂU TRẢ LỜI PHỎNG VẤN MẪU" (Interview Model Answers) theo chủ đề: "${topicPrompt}".
+Mỗi câu là một câu trả lời mẫu xuất sắc, gãy gọn, ăn điểm của ứng viên trước hội đồng tuyển dụng.`;
+  } else {
+    genreGuideline = `BẠN LÀ CHUYÊN GIA BIÊN SOẠN ĐỀ THI TIẾNG ANH CHUYÊN NGÀNH VÀ IELTS HỌC THUẬT HÀNG ĐẦU.
 Chủ đề: "${topicPrompt}". Hãy tạo các câu luyện dịch chuẩn mực, đi thẳng vào nội dung chuyên đề mà người dùng yêu cầu.`;
+  }
 
   const prompt = `${genreGuideline}
 
 Yêu cầu cụ thể:
-1. Chủ đề & Thể loại: "${topicPrompt}". ${isQuestionRequest ? 'BẮT BUỘC 100% CÁC CÂU LÀ CÂU HỎI PHỎNG VẤN THỰC TẾ (dạng câu hỏi kết thúc bằng dấu ?)' : 'Câu luyện dịch chuẩn xác.'}
+1. Chủ đề & Thể loại: "${topicPrompt}". ${isQAPairRequest ? 'BẮT BUỘC 100% CÁC CÂU LÀ CẶP HỎI - ĐÁP (Hỏi: ... Đáp: ... -> Q: ... A: ...)' : isQuestionOnly ? 'BẮT BUỘC 100% CÁC CÂU LÀ CÂU HỎI PHỎNG VẤN (kết thúc bằng dấu ?)' : 'Câu luyện dịch chuẩn xác.'}
 2. Mục tiêu band điểm/trình độ: Band ${band}
 3. Số lượng câu: ĐÚNG CHÍNH XÁC ${count} CÂU (từ câu 1 đến câu ${count}). QUAN TRỌNG: Bạn BẮT BUỘC phải tạo ĐỦ CHÍNH XÁC ${count} phần tử trong mảng JSON, tuyệt đối không được bớt hay thiếu câu!
 4. Câu tiếng Việt: Đi thẳng trực tiếp vào nội dung câu cần dịch (TUYỆT ĐỐI KHÔNG thêm lời dẫn dắt hay tiền tố như 'Liên quan đến...', 'Chủ đề: ...').

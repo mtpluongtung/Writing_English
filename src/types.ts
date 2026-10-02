@@ -52,4 +52,5 @@ export interface GenerationOptions {
   customTopic?: string;
   useGeminiApiKey?: boolean;
   apiKey?: string;
+  exerciseFormat?: 'statement' | 'question' | 'answer' | 'qa_pair';
 }

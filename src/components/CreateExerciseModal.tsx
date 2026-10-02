@@ -27,6 +27,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
   const [customTopic, setCustomTopic] = useState<string>('');
   const [selectedBand, setSelectedBand] = useState<number>(8.0);
   const [sentenceCount, setSentenceCount] = useState<number>(3);
+  const [exerciseFormat, setExerciseFormat] = useState<'statement' | 'question' | 'answer' | 'qa_pair'>('qa_pair');
   const [useGemini, setUseGemini] = useState<boolean>(false);
   const [apiKey, setApiKey] = useState<string>(() => loadApiKey());
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,6 +63,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
         topicVi: preset?.nameVi || selectedTopic,
         band: selectedBand,
         sentenceCount: sentenceCount,
+        exerciseFormat: exerciseFormat,
         customTopic: customTopic.trim() ? customTopic.trim() : undefined,
         useGeminiApiKey: useGemini,
         apiKey: useGemini ? apiKey.trim() : undefined
@@ -229,13 +231,82 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
             </div>
           </div>
 
-          {/* 4. CHỌN ĐỘNG CƠ AI (AI Mode) */}
+          {/* 4. THỂ LOẠI & ĐỊNH DẠNG BÀI TẬP (Exercise Format) */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-500">
+                4. THỂ LOẠI & ĐỊNH DẠNG BÀI TẬP
+              </label>
+              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                {exerciseFormat === 'qa_pair' ? 'Cả Hỏi & Đáp' : exerciseFormat === 'question' ? 'Chỉ câu hỏi' : exerciseFormat === 'answer' ? 'Chỉ câu trả lời' : 'Bài luận học thuật'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                { 
+                  id: 'qa_pair' as const, 
+                  badge: 'HOT Phỏng vấn',
+                  badgeColor: 'bg-emerald-100 text-emerald-800',
+                  title: 'Cả Hỏi & Đáp (Q&A)', 
+                  desc: 'Luyện dịch cả cặp câu hỏi & câu trả lời (Hỏi: ... Đáp: ...)' 
+                },
+                { 
+                  id: 'question' as const, 
+                  badge: 'Phỏng vấn',
+                  badgeColor: 'bg-blue-100 text-blue-800',
+                  title: 'Chỉ câu hỏi', 
+                  desc: 'Luyện dịch các câu hỏi trực tiếp của nhà tuyển dụng (?)' 
+                },
+                { 
+                  id: 'answer' as const, 
+                  badge: 'Phỏng vấn',
+                  badgeColor: 'bg-purple-100 text-purple-800',
+                  title: 'Chỉ câu trả lời', 
+                  desc: 'Luyện dịch các câu trả lời phỏng vấn chuyên nghiệp' 
+                },
+                { 
+                  id: 'statement' as const, 
+                  badge: 'IELTS Essay',
+                  badgeColor: 'bg-amber-100 text-amber-800',
+                  title: 'Bài luận học thuật', 
+                  desc: 'Câu luận điểm, phân tích học thuật chuẩn IELTS Band cao' 
+                },
+              ].map((item) => {
+                const isSelected = exerciseFormat === item.id;
+                return (
+                  <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => setExerciseFormat(item.id)}
+                    className={`p-3 rounded-xl border text-xs text-left transition-all flex flex-col justify-between
+                      ${isSelected 
+                        ? 'bg-emerald-50/80 border-emerald-600 text-emerald-950 shadow-xs ring-2 ring-emerald-500/20' 
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <span className="font-extrabold text-[12px]">{item.title}</span>
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${item.badgeColor}`}>
+                        {item.badge}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-snug">
+                      {item.desc}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 5. CHỌN ĐỘNG CƠ AI (AI Mode) */}
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-emerald-700" />
                 <span className="text-xs font-black text-slate-700 uppercase">
-                  Động cơ AI sinh đề
+                  5. Động cơ AI sinh đề
                 </span>
               </div>
             </div>
