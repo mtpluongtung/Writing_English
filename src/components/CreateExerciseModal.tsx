@@ -38,6 +38,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const apiKeyInputRef = React.useRef<HTMLInputElement | null>(null);
+  const formRef = React.useRef<HTMLFormElement | null>(null);
 
   if (!isOpen) return null;
 
@@ -60,9 +61,9 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
       if (useGemini && apiKey.trim()) {
         saveApiKey(apiKey.trim());
       }
-      const cleanModel = (geminiModel.trim().includes('2.5') ? 'gemini-2.0-flash' : geminiModel.trim()) || 'gemini-2.0-flash';
-      if (useGemini && cleanModel) {
-        saveGeminiModel(cleanModel);
+      const chosenModel = geminiModel.trim() || 'gemini-3.8-flash';
+      if (useGemini && chosenModel) {
+        saveGeminiModel(chosenModel);
       }
 
       const preset = PRESET_TOPICS.find(p => p.id === selectedTopic);
@@ -73,7 +74,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
         band: selectedBand,
         sentenceCount: sentenceCount,
         exerciseFormat: exerciseFormat,
-        geminiModel: useGemini ? cleanModel : undefined,
+        geminiModel: useGemini ? chosenModel : undefined,
         customTopic: customTopic.trim() ? customTopic.trim() : undefined,
         useGeminiApiKey: useGemini,
         apiKey: useGemini ? apiKey.trim() : undefined
@@ -83,8 +84,12 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
       onCreated(newSet);
       onClose();
     } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Có lỗi xảy ra khi tạo bài tập. Vui lòng thử lại.');
+      console.error('Lỗi tạo bài tập:', err);
+      const msg = err.message || 'Có lỗi xảy ra khi tạo bài tập từ AI. Vui lòng thử lại.';
+      setErrorMsg(msg);
+      setTimeout(() => {
+        formRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
     } finally {
       setIsLoading(false);
     }
@@ -124,10 +129,23 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleGenerate} className="p-6 overflow-y-auto space-y-6 flex-1">
+        <form ref={formRef} onSubmit={handleGenerate} className="p-6 overflow-y-auto space-y-6 flex-1">
           {errorMsg && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs">
-              {errorMsg}
+            <div className="p-4 bg-red-50 border-2 border-red-500 rounded-2xl text-red-900 text-xs shadow-md animate-shake">
+              <div className="flex items-start gap-3">
+                <span className="w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">✕</span>
+                <div className="flex-1 space-y-1.5">
+                  <div className="font-black text-red-900 text-sm">
+                    Lỗi từ AI ({useGemini ? `Model: ${geminiModel}` : 'Tạo bài tập'}):
+                  </div>
+                  <div className="font-mono text-[11px] text-red-900 bg-red-100 p-2.5 rounded-xl border border-red-200 break-words leading-relaxed">
+                    {errorMsg}
+                  </div>
+                  <p className="text-[11px] text-red-700 font-medium">
+                    * Vui lòng kiểm tra lại API Key, kết nối mạng, tên model, hoặc chuyển sang <strong>"⚡ AI Tức thì (Built-in)"</strong> bên dưới để tạo bài ngay.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -495,8 +513,36 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
             )}
           </div>
 
-          {/* Submit Button */}
-          <div className="pt-2">
+          {/* Submit Button & Bottom Error Notification */}
+          <div className="pt-2 space-y-3">
+            {errorMsg && (
+              <div className="p-3.5 bg-red-50 border-2 border-red-500 rounded-2xl text-red-900 text-xs shadow-xs animate-shake space-y-2">
+                <div className="flex items-start gap-2.5">
+                  <span className="w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] font-black flex-shrink-0 mt-0.5">✕</span>
+                  <div className="flex-1">
+                    <div className="font-black text-red-900 text-xs">
+                      Lỗi tạo đề AI ({useGemini ? `Model: ${geminiModel}` : 'Built-in'}):
+                    </div>
+                    <div className="font-mono text-[11px] text-red-900 bg-red-100 p-2 rounded-lg mt-1 border border-red-200 break-words leading-relaxed">
+                      {errorMsg}
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-1 flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUseGemini(false);
+                      setErrorMsg(null);
+                    }}
+                    className="text-[11px] font-extrabold bg-white border border-red-300 text-red-700 hover:bg-red-100 px-3 py-1.5 rounded-xl transition-all shadow-2xs"
+                  >
+                    ⚡ Đổi sang "AI Tức thì (Built-in)" không cần Key
+                  </button>
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={isLoading}

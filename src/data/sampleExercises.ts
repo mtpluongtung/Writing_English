@@ -162,30 +162,51 @@ export interface GeminiModelOption {
 
 export const GEMINI_MODELS: GeminiModelOption[] = [
   {
+    id: 'gemini-3.8-flash',
+    name: 'Gemini 3.8 Flash',
+    tag: 'Bản 3.8 Flash',
+    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    desc: 'Mô hình Gemini 3.8 Flash hiệu năng cao.'
+  },
+  {
+    id: 'gemini-3.7-flash',
+    name: 'Gemini 3.7 Flash',
+    tag: 'Bản 3.7 Flash',
+    badgeClass: 'bg-teal-100 text-teal-800 border-teal-200',
+    desc: 'Mô hình Gemini 3.7 Flash tốc độ cao.'
+  },
+  {
+    id: 'gemini-3.6-flash',
+    name: 'Gemini 3.6 Flash',
+    tag: 'Bản 3.6 Flash',
+    badgeClass: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+    desc: 'Mô hình Gemini 3.6 Flash.'
+  },
+  {
     id: 'gemini-2.0-flash',
     name: 'Gemini 2.0 Flash',
-    tag: 'Khuyên dùng (Mới nhất)',
-    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    desc: 'Mô hình thế hệ 2.0 mới nhất của Google, siêu nhanh & thông minh.'
+    tag: 'Bản 2.0 Flash',
+    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
+    desc: 'Mô hình thế hệ 2.0 Flash của Google.'
   },
   {
     id: 'gemini-1.5-flash',
     name: 'Gemini 1.5 Flash',
-    tag: 'Rất ổn định',
-    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
-    desc: 'Bản 1.5 Flash thông dụng nhất, độ trễ thấp, hạn mức gọi rộng.'
+    tag: 'Bản 1.5 Flash',
+    badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+    desc: 'Bản 1.5 Flash thông dụng, ổn định cao.'
   },
   {
     id: 'gemini-1.5-pro',
     name: 'Gemini 1.5 Pro',
-    tag: 'Tư duy sâu',
+    tag: 'Bản 1.5 Pro',
     badgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
     desc: 'Mô hình 1.5 Pro lý luận sâu sắc, chuẩn văn phong học thuật cao cấp.'
   },
   {
     id: 'gemini-2.0-flash-lite',
     name: 'Gemini 2.0 Flash Lite',
-    tag: 'Siêu nhẹ',
+    tag: 'Bản Lite',
     badgeClass: 'bg-purple-100 text-purple-800 border-purple-200',
     desc: 'Bản Flash 2.0 rút gọn, tối ưu chi phí và tốc độ phản hồi.'
   }
