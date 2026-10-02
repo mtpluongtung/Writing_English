@@ -1299,9 +1299,10 @@ Yêu cầu cụ thể:
 3. Số lượng câu: ĐÚNG CHÍNH XÁC ${count} CÂU (từ câu 1 đến câu ${count}). QUAN TRỌNG: Bạn BẮT BUỘC phải tạo ĐỦ CHÍNH XÁC ${count} phần tử trong mảng JSON, tuyệt đối không được bớt hay thiếu câu!
 4. Câu tiếng Việt: Đi thẳng trực tiếp vào nội dung câu cần dịch (TUYỆT ĐỐI KHÔNG thêm lời dẫn dắt hay tiền tố như 'Liên quan đến...', 'Chủ đề: ...').
 5. Câu tiếng Anh mẫu: Chuẩn xác tuyệt đối, cấu trúc câu tinh tế (inversion, passive voice, nominalization, collocations kỹ thuật chuẩn xác) tương ứng chính xác với Band ${band}.
-6. Danh sách từ vựng gợi ý (vocabHints): 3-5 từ/thuật ngữ then chốt với nghĩa tiếng Việt và loại từ.
-7. Ghi chú ngữ pháp (grammarNotes): 2-3 điểm ngữ pháp/cấu trúc câu quan trọng trong câu.
+6. Danh sách từ vựng gợi ý (vocabHints): 2-4 từ/thuật ngữ then chốt với nghĩa tiếng Việt ngắn gọn.
+7. Ghi chú ngữ pháp (grammarNotes): 1-2 điểm ngữ pháp súc tích.
 8. Các phiên bản thay thế (alternativeAnswers): 1 phiên bản đơn giản hơn (khoảng Band 6.0 - 6.5) và 1 phiên bản nâng cao (Band 8.0 - 8.5+).
+LƯU Ý QUAN TRỌNG: Viết súc tích, cô đọng để đảm bảo toàn bộ ${count} câu hoàn chỉnh trong phản hồi JSON, tuyệt đối không bị ngắt quãng giữa chừng.
 
 QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON ARRAY hợp lệ duy nhất chứa ĐỦ CHÍNH XÁC ${count} đối tượng bài tập, KHÔNG có văn bản giải thích thừa ngoài JSON:
 [
@@ -1355,40 +1356,18 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
     throw new Error('Gemini không phản hồi dữ liệu.');
   }
 
-  // Robust JSON parsing
-  let cleanJson = rawText.trim();
-  const firstBracket = cleanJson.indexOf('[');
-  const lastBracket = cleanJson.lastIndexOf(']');
-  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
-    cleanJson = cleanJson.substring(firstBracket, lastBracket + 1);
-  } else {
-    const firstBrace = cleanJson.indexOf('{');
-    const lastBrace = cleanJson.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      cleanJson = cleanJson.substring(firstBrace, lastBrace + 1);
-    }
+  // Parse JSON resiliently with fallback for truncated responses
+  const parsedItems = robustParseJsonExercises(rawText);
+
+  const validItems = parsedItems.filter(
+    (item: any) => item && (item.vietnameseText?.trim() || item.englishAnswer?.trim())
+  );
+
+  if (validItems.length === 0) {
+    throw new Error('Không trích xuất được bài tập hợp lệ nào từ phản hồi của Gemini.');
   }
 
-  let parsedItems: any;
-  try {
-    parsedItems = JSON.parse(cleanJson);
-  } catch {
-    // Fallback: strip markdown blocks
-    const stripped = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-    parsedItems = JSON.parse(stripped);
-  }
-
-  if (!Array.isArray(parsedItems)) {
-    if (Array.isArray(parsedItems?.items)) {
-      parsedItems = parsedItems.items;
-    } else if (Array.isArray(parsedItems?.exercises)) {
-      parsedItems = parsedItems.exercises;
-    } else {
-      throw new Error('Định dạng JSON từ Gemini không đúng mảng bài tập.');
-    }
-  }
-
-  return (parsedItems as any[]).map((item: any, idx: number) => ({
+  return validItems.map((item: any, idx: number) => ({
     id: `gemini-item-${Date.now()}-${idx + 1}`,
     order: idx + 1,
     vietnameseText: item.vietnameseText || '',
@@ -1401,6 +1380,93 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
     isCompleted: false,
     accuracyScore: 0
   }));
+}
+
+// Resilient JSON parser capable of salvaging completed objects even if output was truncated
+function robustParseJsonExercises(rawText: string): any[] {
+  let clean = rawText.trim();
+  if (clean.startsWith('```json')) {
+    clean = clean.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+  } else if (clean.startsWith('```')) {
+    clean = clean.replace(/^```\s*/, '').replace(/\s*```$/, '');
+  }
+  clean = clean.trim();
+
+  // Try 1: Direct JSON.parse
+  try {
+    const direct = JSON.parse(clean);
+    if (Array.isArray(direct)) return direct;
+    if (Array.isArray(direct?.items)) return direct.items;
+    if (Array.isArray(direct?.exercises)) return direct.exercises;
+  } catch {
+    // Continue to next attempts
+  }
+
+  // Try 2: Bracket slice [ ... ]
+  const firstBracket = clean.indexOf('[');
+  const lastBracket = clean.lastIndexOf(']');
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    try {
+      const sliced = JSON.parse(clean.substring(firstBracket, lastBracket + 1));
+      if (Array.isArray(sliced)) return sliced;
+      if (Array.isArray(sliced?.items)) return sliced.items;
+      if (Array.isArray(sliced?.exercises)) return sliced.exercises;
+    } catch {
+      // Continue to next attempts
+    }
+  }
+
+  // Try 3: Salvage all complete { ... } objects if JSON was truncated mid-stream
+  const salvagedItems: any[] = [];
+  const searchStart = firstBracket !== -1 ? firstBracket + 1 : 0;
+  let depth = 0;
+  let startIdx = -1;
+  let inString = false;
+  let escape = false;
+
+  for (let i = searchStart; i < clean.length; i++) {
+    const char = clean[i];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+
+    if (char === '{') {
+      if (depth === 0) {
+        startIdx = i;
+      }
+      depth++;
+    } else if (char === '}') {
+      depth--;
+      if (depth === 0 && startIdx !== -1) {
+        const candidate = clean.substring(startIdx, i + 1);
+        try {
+          const parsed = JSON.parse(candidate);
+          if (parsed && (parsed.vietnameseText || parsed.englishAnswer)) {
+            salvagedItems.push(parsed);
+          }
+        } catch {
+          // ignore incomplete candidate
+        }
+        startIdx = -1;
+      }
+    }
+  }
+
+  if (salvagedItems.length > 0) {
+    return salvagedItems;
+  }
+
+  throw new Error('Dữ liệu JSON từ Gemini bị lỗi hoặc đứt đoạn. Vui lòng thử lại với số lượng câu ít hơn hoặc chọn model khác.');
 }
 
 // Master function to generate an ExerciseSet
