@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   X, 
   Sparkles, 
@@ -10,7 +10,14 @@ import {
 import { PRESET_TOPICS, BAND_OPTIONS, GEMINI_MODELS } from '../data/sampleExercises';
 import type { GenerationOptions, ExerciseSet } from '../types';
 import { createNewExerciseSet } from '../services/aiGenerator';
-import { saveApiKey, loadApiKey, loadGeminiModel, saveGeminiModel } from '../services/storage';
+import { 
+  saveApiKey, 
+  loadApiKey, 
+  loadGeminiModel, 
+  saveGeminiModel,
+  loadModalPreferences,
+  saveModalPreferences 
+} from '../services/storage';
 
 interface CreateExerciseModalProps {
   isOpen: boolean;
@@ -23,16 +30,20 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
   onClose,
   onCreated
 }) => {
-  const [selectedTopic, setSelectedTopic] = useState<string>('Technology');
-  const [customTopic, setCustomTopic] = useState<string>('');
-  const [selectedBand, setSelectedBand] = useState<number>(8.0);
-  const [sentenceCount, setSentenceCount] = useState<number>(3);
-  const [exerciseFormat, setExerciseFormat] = useState<'statement' | 'question' | 'answer' | 'qa_pair'>('qa_pair');
-  const [useGemini, setUseGemini] = useState<boolean>(false);
+  const initialPrefs = useMemo(() => loadModalPreferences(), []);
+
+  const [selectedTopic, setSelectedTopic] = useState<string>(() => initialPrefs.selectedTopic || 'Technology');
+  const [customTopic, setCustomTopic] = useState<string>(() => initialPrefs.customTopic || '');
+  const [selectedBand, setSelectedBand] = useState<number>(() => initialPrefs.selectedBand ?? 8.0);
+  const [sentenceCount, setSentenceCount] = useState<number>(() => initialPrefs.sentenceCount ?? 5);
+  const [exerciseFormat, setExerciseFormat] = useState<'statement' | 'question' | 'answer' | 'qa_pair'>(
+    () => initialPrefs.exerciseFormat || 'qa_pair'
+  );
+  const [useGemini, setUseGemini] = useState<boolean>(() => initialPrefs.useGemini ?? false);
   const [apiKey, setApiKey] = useState<string>(() => loadApiKey());
-  const [geminiModel, setGeminiModel] = useState<string>(() => loadGeminiModel());
+  const [geminiModel, setGeminiModel] = useState<string>(() => initialPrefs.geminiModel || loadGeminiModel());
   const [isCustomModel, setIsCustomModel] = useState<boolean>(() => {
-    const saved = loadGeminiModel();
+    const saved = initialPrefs.geminiModel || loadGeminiModel();
     return !GEMINI_MODELS.some(m => m.id === saved);
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,10 +72,21 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
       if (useGemini && apiKey.trim()) {
         saveApiKey(apiKey.trim());
       }
-      const chosenModel = geminiModel.trim() || 'gemini-3.8-flash';
+      const chosenModel = geminiModel.trim() || 'gemini-2.0-flash';
       if (useGemini && chosenModel) {
         saveGeminiModel(chosenModel);
       }
+
+      // Save all current preferences to localStorage
+      saveModalPreferences({
+        selectedTopic,
+        customTopic,
+        selectedBand,
+        sentenceCount,
+        exerciseFormat,
+        useGemini,
+        geminiModel: chosenModel
+      });
 
       const preset = PRESET_TOPICS.find(p => p.id === selectedTopic);
 
@@ -166,6 +188,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                     onClick={() => {
                       setSelectedTopic(topic.id);
                       setCustomTopic('');
+                      saveModalPreferences({ selectedTopic: topic.id, customTopic: '' });
                     }}
                     className={`p-2.5 rounded-xl text-xs font-bold border transition-all text-left flex flex-col justify-between h-16
                       ${isSelected 
@@ -188,7 +211,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                 type="text"
                 placeholder="Hoặc tự nhập chủ đề tùy ý (VD: Trí tuệ nhân tạo trong y tế, Nông nghiệp sạch...)"
                 value={customTopic}
-                onChange={(e) => setCustomTopic(e.target.value)}
+                onChange={(e) => {
+                  setCustomTopic(e.target.value);
+                  saveModalPreferences({ customTopic: e.target.value });
+                }}
                 className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all placeholder:text-slate-400 font-medium"
               />
             </div>
@@ -212,7 +238,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                   <button
                     type="button"
                     key={band.value}
-                    onClick={() => setSelectedBand(band.value)}
+                    onClick={() => {
+                      setSelectedBand(band.value);
+                      saveModalPreferences({ selectedBand: band.value });
+                    }}
                     className={`py-2 rounded-xl text-xs font-black transition-all border
                       ${isSelected 
                         ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm scale-105' 
@@ -245,7 +274,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                 <button
                   type="button"
                   key={item.count}
-                  onClick={() => setSentenceCount(item.count)}
+                  onClick={() => {
+                    setSentenceCount(item.count);
+                    saveModalPreferences({ sentenceCount: item.count });
+                  }}
                   className={`p-2.5 rounded-xl border text-xs font-bold transition-all text-center
                     ${sentenceCount === item.count 
                       ? 'bg-emerald-50 border-emerald-600 text-emerald-900 shadow-xs' 
@@ -306,7 +338,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                   <button
                     type="button"
                     key={item.id}
-                    onClick={() => setExerciseFormat(item.id)}
+                    onClick={() => {
+                      setExerciseFormat(item.id);
+                      saveModalPreferences({ exerciseFormat: item.id });
+                    }}
                     className={`p-3 rounded-xl border text-xs text-left transition-all flex flex-col justify-between
                       ${isSelected 
                         ? 'bg-emerald-50/80 border-emerald-600 text-emerald-950 shadow-xs ring-2 ring-emerald-500/20' 
@@ -342,7 +377,10 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
               <button
                 type="button"
-                onClick={() => setUseGemini(false)}
+                onClick={() => {
+                  setUseGemini(false);
+                  saveModalPreferences({ useGemini: false });
+                }}
                 className={`p-3 rounded-xl border text-xs text-left transition-all
                   ${!useGemini 
                     ? 'bg-white border-emerald-600 text-emerald-950 shadow-sm ring-2 ring-emerald-500/20' 
@@ -362,6 +400,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                 type="button"
                 onClick={() => {
                   setUseGemini(true);
+                  saveModalPreferences({ useGemini: true });
                   setTimeout(() => apiKeyInputRef.current?.focus(), 80);
                 }}
                 className={`p-3 rounded-xl border text-xs text-left transition-all
@@ -418,6 +457,7 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                       value={apiKey}
                       onChange={(e) => {
                         setApiKey(e.target.value);
+                        saveApiKey(e.target.value);
                         if (errorMsg) setErrorMsg(null);
                       }}
                       className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
@@ -425,90 +465,82 @@ export const CreateExerciseModal: React.FC<CreateExerciseModalProps> = ({
                   </div>
                 </div>
 
-                {/* 2. Model Selection */}
-                <div className="pt-2 border-t border-slate-100">
-                  <div className="flex items-center justify-between mb-2">
+                {/* 2. Model Selection (Combobox & Text Input) */}
+                <div className="pt-2 border-t border-slate-100 space-y-2.5">
+                  <div className="flex items-center justify-between">
                     <label className="block text-[11px] font-bold text-slate-700">
-                      Chọn phiên bản Gemini Model:
+                      Chọn hoặc nhập Gemini Model:
                     </label>
                     <span className="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                       {geminiModel}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {GEMINI_MODELS.map((m) => {
-                      const isChosen = geminiModel === m.id && !isCustomModel;
-                      return (
-                        <button
-                          type="button"
-                          key={m.id}
-                          onClick={() => {
-                            setGeminiModel(m.id);
-                            setIsCustomModel(false);
-                            saveGeminiModel(m.id);
-                          }}
-                          className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between
-                            ${isChosen
-                              ? 'bg-emerald-50 border-emerald-600 text-emerald-950 shadow-2xs ring-1 ring-emerald-500/20'
-                              : 'bg-slate-50/60 border-slate-200 text-slate-700 hover:bg-white'
-                            }`}
-                        >
-                          <div className="flex items-center justify-between w-full mb-1">
-                            <span className="text-[11px] font-bold">{m.name}</span>
-                            <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${m.badgeClass}`}>
-                              {m.tag}
-                            </span>
-                          </div>
-                          <p className="text-[10px] text-slate-500 leading-tight">
-                            {m.desc}
-                          </p>
-                        </button>
-                      );
-                    })}
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCustomModel(true);
+                  {/* Combobox Dropdown */}
+                  <div>
+                    <select
+                      value={GEMINI_MODELS.some(m => m.id === geminiModel) ? geminiModel : 'custom'}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === 'custom') {
+                          setIsCustomModel(true);
+                        } else {
+                          setIsCustomModel(false);
+                          setGeminiModel(val);
+                          saveGeminiModel(val);
+                          saveModalPreferences({ geminiModel: val });
+                          if (errorMsg) setErrorMsg(null);
+                        }
                       }}
-                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between
-                        ${isCustomModel
-                          ? 'bg-emerald-50 border-emerald-600 text-emerald-950 shadow-2xs ring-1 ring-emerald-500/20'
-                          : 'bg-slate-50/60 border-slate-200 text-slate-700 hover:bg-white'
-                        }`}
+                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-800 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none cursor-pointer"
                     >
-                      <div className="flex items-center justify-between w-full mb-1">
-                        <span className="text-[11px] font-bold">Model khác (Tùy chỉnh)</span>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">
-                          Custom
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-slate-500 leading-tight">
-                        Tự nhập ID model mới (VD: gemini-2.0-flash-lite)
-                      </p>
-                    </button>
+                      <optgroup label="⚡ Phiên bản 3.x Flash">
+                        <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+                        <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+                        <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+                      </optgroup>
+                      <optgroup label="🌟 Phiên bản 2.0 & 1.5">
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash (Khuyên dùng, ổn định cao)</option>
+                        <option value="gemini-1.5-flash">Gemini 1.5 Flash (Phổ biến nhất)</option>
+                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Học thuật, lý luận sâu)</option>
+                        <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite (Tiết kiệm token)</option>
+                      </optgroup>
+                      <option value="custom">✍️ Tùy chỉnh (Nhập text model khác...)</option>
+                    </select>
                   </div>
 
-                  {isCustomModel && (
-                    <div className="mt-2.5">
-                      <input
-                        type="text"
-                        placeholder="Nhập tên model ID (ví dụ: gemini-2.0-flash-lite, gemini-exp-1206...)"
-                        value={geminiModel}
-                        onChange={(e) => {
-                          setGeminiModel(e.target.value);
-                          saveGeminiModel(e.target.value);
-                        }}
-                        className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono"
-                      />
+                  {/* Text input to directly view / edit / type model name */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold text-slate-500">
+                        Hoặc nhập / chỉnh sửa text Model ID:
+                      </span>
+                      {isCustomModel && (
+                        <span className="text-[9px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
+                          Custom ID
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
+                    <input
+                      type="text"
+                      placeholder="Nhập tên Model ID (VD: gemini-3.8-flash, gemini-2.0-flash...)"
+                      value={geminiModel}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setGeminiModel(val);
+                        setIsCustomModel(!GEMINI_MODELS.some(m => m.id === val));
+                        saveGeminiModel(val);
+                        saveModalPreferences({ geminiModel: val });
+                        if (errorMsg) setErrorMsg(null);
+                      }}
+                      className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none font-mono bg-white shadow-2xs"
+                    />
+                  </div>
 
-                <p className="text-[10px] text-slate-500 leading-normal pt-1 border-t border-slate-100">
-                  * API Key và cấu hình Model được lưu an toàn trên trình duyệt của bạn (localStorage).
-                </p>
+                  <p className="text-[10px] text-slate-500 leading-normal pt-1 border-t border-slate-100">
+                    * Cả danh sách chọn (combobox) và text nhập đều được tự động lưu vào localStorage và giữ nguyên ở các lần mở tiếp theo.
+                  </p>
+                </div>
               </div>
             )}
           </div>

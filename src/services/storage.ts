@@ -51,10 +51,61 @@ export function saveApiKey(key: string): void {
 
 export function loadGeminiModel(): string {
   const saved = localStorage.getItem(STORAGE_KEYS.GEMINI_MODEL);
-  return saved || 'gemini-3.8-flash';
+  return saved || 'gemini-2.0-flash';
 }
 
 export function saveGeminiModel(model: string): void {
   localStorage.setItem(STORAGE_KEYS.GEMINI_MODEL, model.trim());
+}
+
+export interface ModalPreferences {
+  selectedTopic: string;
+  customTopic: string;
+  selectedBand: number;
+  sentenceCount: number;
+  exerciseFormat: 'statement' | 'question' | 'answer' | 'qa_pair';
+  useGemini: boolean;
+  geminiModel: string;
+}
+
+const MODAL_PREFS_KEY = 'ielts_modal_preferences_v2';
+
+export function loadModalPreferences(): ModalPreferences {
+  const defaultPrefs: ModalPreferences = {
+    selectedTopic: 'Technology',
+    customTopic: '',
+    selectedBand: 8.0,
+    sentenceCount: 5,
+    exerciseFormat: 'qa_pair',
+    useGemini: false,
+    geminiModel: loadGeminiModel() || 'gemini-2.0-flash'
+  };
+
+  try {
+    const raw = localStorage.getItem(MODAL_PREFS_KEY);
+    if (!raw) return defaultPrefs;
+    const parsed = JSON.parse(raw);
+    return {
+      ...defaultPrefs,
+      ...parsed,
+      geminiModel: parsed.geminiModel || loadGeminiModel() || 'gemini-2.0-flash'
+    };
+  } catch (e) {
+    console.error('Failed to load modal preferences:', e);
+    return defaultPrefs;
+  }
+}
+
+export function saveModalPreferences(prefs: Partial<ModalPreferences>): void {
+  try {
+    const current = loadModalPreferences();
+    const updated = { ...current, ...prefs };
+    localStorage.setItem(MODAL_PREFS_KEY, JSON.stringify(updated));
+    if (prefs.geminiModel) {
+      saveGeminiModel(prefs.geminiModel);
+    }
+  } catch (e) {
+    console.error('Failed to save modal preferences:', e);
+  }
 }
 

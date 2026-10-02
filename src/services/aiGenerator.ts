@@ -1299,12 +1299,15 @@ Yêu cầu cụ thể:
 3. Số lượng câu: ĐÚNG CHÍNH XÁC ${count} CÂU (từ câu 1 đến câu ${count}). QUAN TRỌNG: Bạn BẮT BUỘC phải tạo ĐỦ CHÍNH XÁC ${count} phần tử trong mảng JSON, tuyệt đối không được bớt hay thiếu câu!
 4. Câu tiếng Việt: Đi thẳng trực tiếp vào nội dung câu cần dịch (TUYỆT ĐỐI KHÔNG thêm lời dẫn dắt hay tiền tố như 'Liên quan đến...', 'Chủ đề: ...').
 5. Câu tiếng Anh mẫu: Chuẩn xác tuyệt đối, cấu trúc câu tinh tế (inversion, passive voice, nominalization, collocations kỹ thuật chuẩn xác) tương ứng chính xác với Band ${band}.
-6. Danh sách từ vựng gợi ý (vocabHints): 2-4 từ/thuật ngữ then chốt với nghĩa tiếng Việt ngắn gọn.
+6. Danh sách từ vựng gợi ý (vocabHints): đúng 2-3 từ/thuật ngữ then chốt với nghĩa tiếng Việt ngắn gọn.
 7. Ghi chú ngữ pháp (grammarNotes): 1-2 điểm ngữ pháp súc tích.
-8. Các phiên bản thay thế (alternativeAnswers): 1 phiên bản đơn giản hơn (khoảng Band 6.0 - 6.5) và 1 phiên bản nâng cao (Band 8.0 - 8.5+).
-LƯU Ý QUAN TRỌNG: Viết súc tích, cô đọng để đảm bảo toàn bộ ${count} câu hoàn chỉnh trong phản hồi JSON, tuyệt đối không bị ngắt quãng giữa chừng.
+8. Các phiên bản thay thế (alternativeAnswers): 1 phiên bản đơn giản hơn (khoảng Band 6.0 - 6.5) và 1 phiên bản nâng cao (Band 8.0 - 8.5+) (chỉ cần field band và text, không viết giải thích dài dòng).
 
-QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON ARRAY hợp lệ duy nhất chứa ĐỦ CHÍNH XÁC ${count} đối tượng bài tập, KHÔNG có văn bản giải thích thừa ngoài JSON:
+QUY TẮC CÚ PHÁP JSON BẮT BUỘC:
+- Viết súc tích, cô đọng để đảm bảo toàn bộ ${count} câu hoàn chỉnh 100% trong phản hồi JSON, tuyệt đối không bị ngắt quãng giữa chừng.
+- TUYỆT ĐỐI KHÔNG dùng dấu ngoặc kép "..." bên trong chuỗi text (dùng dấu nháy đơn '...' thay thế để tránh lỗi cú pháp JSON).
+- TUYỆT ĐỐI KHÔNG chứa ký tự xuống dòng (enter) bên trong một chuỗi string.
+- Kết quả BẮT BUỘC là một JSON ARRAY hợp lệ duy nhất chứa ĐỦ CHÍNH XÁC ${count} đối tượng bài tập, KHÔNG có văn bản giải thích thừa ngoài JSON:
 [
   {
     "vietnameseText": "...",
@@ -1314,13 +1317,13 @@ QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON AR
     ],
     "grammarNotes": [ "..." ],
     "alternativeAnswers": [
-      { "band": 6.5, "text": "...", "highlight": "..." },
-      { "band": 8.5, "text": "...", "highlight": "..." }
+      { "band": 6.5, "text": "..." },
+      { "band": 8.5, "text": "..." }
     ]
   }
 ]`;
 
-  const selectedModel = options.geminiModel?.trim() || 'gemini-3.8-flash';
+  const selectedModel = options.geminiModel?.trim() || 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(selectedModel)}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
@@ -1416,7 +1419,31 @@ function robustParseJsonExercises(rawText: string): any[] {
     }
   }
 
-  // Try 3: Salvage all complete { ... } objects if JSON was truncated mid-stream
+  // Try 3: Backward repair loop for truncated JSON array
+  // If the generation was truncated at position 30000+, find the last closing '}' of a complete item
+  if (firstBracket !== -1) {
+    let searchPos = clean.length;
+    while (searchPos > firstBracket) {
+      const braceIdx = clean.lastIndexOf('}', searchPos);
+      if (braceIdx <= firstBracket) break;
+      let candidate = clean.substring(firstBracket, braceIdx + 1).trim();
+      if (candidate.endsWith(',')) {
+        candidate = candidate.slice(0, -1).trim();
+      }
+      candidate += ']';
+      try {
+        const parsed = JSON.parse(candidate);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch {
+        // Move backward to previous closing brace
+      }
+      searchPos = braceIdx - 1;
+    }
+  }
+
+  // Try 4: Salvage all complete { ... } objects if JSON had syntax defects
   const salvagedItems: any[] = [];
   const searchStart = firstBracket !== -1 ? firstBracket + 1 : 0;
   let depth = 0;
