@@ -39,10 +39,14 @@ export function App() {
   const safeIndex = Math.min(Math.max(0, currentIndex), currentSet.items.length - 1);
   const currentExercise = currentSet.items[safeIndex];
 
-  // Keep userAnswer synced when switching exercise
+  // Keep userAnswer synced when switching exercise and focus textarea
   useEffect(() => {
     if (currentExercise) {
       setUserAnswer(currentExercise.userAnswer || '');
+      const timer = setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 60);
+      return () => clearTimeout(timer);
     }
   }, [currentExercise?.id]);
 
@@ -82,6 +86,23 @@ export function App() {
   // Complete exercise
   const handleCompleteCurrent = () => {
     if (!currentExercise) return;
+
+    // If current exercise was already completed, advance to next question
+    if (currentExercise.isCompleted) {
+      if (safeIndex < currentSet.items.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+        setHintTokenIndex(null);
+      } else {
+        const nextUncompletedIdx = currentSet.items.findIndex(i => !i.isCompleted);
+        if (nextUncompletedIdx !== -1) {
+          setCurrentIndex(nextUncompletedIdx);
+          setHintTokenIndex(null);
+        } else {
+          setIsSummaryModalOpen(true);
+        }
+      }
+      return;
+    }
 
     // Strict guard: ensure every token is completed without error
     const tokens = evaluateTokens(currentExercise.tokens, userAnswer, false, null);
@@ -123,7 +144,22 @@ export function App() {
     if (allDone) {
       setTimeout(() => {
         setIsSummaryModalOpen(true);
-      }, 1000);
+      }, 700);
+    } else if (safeIndex < currentSet.items.length - 1) {
+      // Auto-advance to the next exercise after a short pleasant pause
+      setTimeout(() => {
+        setCurrentIndex(prev => prev + 1);
+        setHintTokenIndex(null);
+      }, 400);
+    } else {
+      // If was at the last index, but earlier questions were skipped
+      const firstUncompleted = updatedItems.findIndex(i => !i.isCompleted);
+      if (firstUncompleted !== -1) {
+        setTimeout(() => {
+          setCurrentIndex(firstUncompleted);
+          setHintTokenIndex(null);
+        }, 400);
+      }
     }
   };
 

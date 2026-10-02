@@ -23,14 +23,24 @@ export const ExerciseSummaryModal: React.FC<ExerciseSummaryModalProps> = ({
   const totalQuestions = set.items.length;
   const completedQuestions = set.items.filter(i => i.isCompleted).length;
   
-  // Trigger celebratory confetti
+  // Trigger celebratory confetti and listen to Enter key
   React.useEffect(() => {
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 }
     });
-  }, []);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onClose();
+        onCreateNew();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, onCreateNew]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
@@ -71,7 +81,7 @@ export const ExerciseSummaryModal: React.FC<ExerciseSummaryModalProps> = ({
               className="w-full bg-[#2d5a2d] hover:bg-[#234923] text-white font-extrabold text-xs py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
             >
               <Sparkles className="w-4 h-4 text-emerald-300" />
-              <span>Tạo chủ đề & bài tập mới với AI</span>
+              <span>Tạo chủ đề & bài tập mới với AI (Enter)</span>
             </button>
 
             <button

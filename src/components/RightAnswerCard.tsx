@@ -83,7 +83,11 @@ export const RightAnswerCard: React.FC<RightAnswerCardProps> = ({
   // Validate entire translation before completing
   const handleAttemptComplete = () => {
     if (exercise.isCompleted) {
-      onCompleteExercise();
+      if (hasNext) {
+        onNext();
+      } else {
+        onCompleteExercise();
+      }
       return;
     }
 
@@ -155,6 +159,21 @@ export const RightAnswerCard: React.FC<RightAnswerCardProps> = ({
       onCursorChange(target.selectionStart);
     }
   };
+
+  // Global Enter shortcut listener when reading feedback or outside textarea
+  React.useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const activeTag = document.activeElement?.tagName.toLowerCase();
+        if (activeTag !== 'textarea' && activeTag !== 'input') {
+          e.preventDefault();
+          handleAttemptComplete();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [exercise.isCompleted, hasNext, userAnswer]);
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl border border-slate-100/80 p-7 sm:p-8 lg:p-9 xl:p-10 flex flex-col justify-between h-full min-h-[660px]">
@@ -380,8 +399,17 @@ export const RightAnswerCard: React.FC<RightAnswerCardProps> = ({
           onClick={handleAttemptComplete}
           className="flex-1 max-w-sm flex items-center justify-center gap-2 bg-[#2d5a2d] hover:bg-[#254b25] active:bg-[#1e3c1e] text-white font-black text-sm px-6 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-98 select-none"
         >
-          <span>HOÀN THÀNH BÀI TẬP (ENTER)</span>
-          <Check className="w-4 h-4 stroke-[3]" />
+          {exercise.isCompleted ? (
+            <>
+              <span>{hasNext ? 'CÂU TIẾP THEO (ENTER)' : 'HOÀN THÀNH BỘ ĐỀ (ENTER)'}</span>
+              <ArrowRight className="w-4 h-4 stroke-[3]" />
+            </>
+          ) : (
+            <>
+              <span>HOÀN THÀNH BÀI TẬP (ENTER)</span>
+              <Check className="w-4 h-4 stroke-[3]" />
+            </>
+          )}
         </button>
 
         {/* Next Button */}
