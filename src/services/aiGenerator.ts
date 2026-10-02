@@ -128,113 +128,113 @@ const TOPIC_TEMPLATES: Record<string, Array<{
   ],
   Programming: [
     {
-      vi: 'Nguyên lý Dependency Injection giúp giảm sự phụ thuộc trực tiếp giữa các module và tăng khả năng kiểm thử đơn vị trong các ứng dụng doanh nghiệp.',
-      en: 'The Dependency Injection principle decouples direct dependencies between modules and significantly improves unit testability in enterprise software applications.',
+      vi: 'Bạn có thể giải thích nguyên lý Dependency Injection giúp tách rời sự phụ thuộc trực tiếp giữa các module trong .NET như thế nào không?',
+      en: 'Can you explain how the Dependency Injection principle decouples direct dependencies between modules in .NET enterprise software?',
       vocab: [
-        { word: 'Dependency Injection', meaning: 'kỹ thuật tiêm phụ thuộc', type: 'Design Pattern' },
-        { word: 'decouples dependencies', meaning: 'giảm bớt/tách rời sự phụ thuộc', type: 'Collocation' },
-        { word: 'unit testability', meaning: 'khả năng kiểm thử đơn vị', type: 'Technical Term' }
+        { word: 'Dependency Injection', meaning: 'tiêm phụ thuộc (DI)', type: 'Pattern' },
+        { word: 'decouples dependencies', meaning: 'tách rời sự phụ thuộc', type: 'Collocation' },
+        { word: 'enterprise software', meaning: 'phần mềm doanh nghiệp', type: 'Noun phrase' }
       ],
-      grammar: ['Hiện tại đơn miêu tả nguyên lý kỹ thuật', 'Động từ song hành: "decouples ... and improves ..."'],
-      band: 8.0
+      grammar: ['Câu hỏi gián tiếp: "Can you explain how..."', 'Hiện tại đơn'],
+      band: 7.5
     },
     {
-      vi: 'Cơ chế Garbage Collection tự động thu hồi bộ nhớ không còn được sử dụng để ngăn ngừa hiện tượng rò rỉ bộ nhớ trong các hệ thống hiệu năng cao.',
-      en: 'The Garbage Collection mechanism automatically reclaims unreferenced memory to effectively prevent memory leaks in high-performance computing systems.',
+      vi: 'Cơ chế Garbage Collection tự động thu hồi bộ nhớ không còn tham chiếu trong .NET hoạt động như thế nào để ngăn ngừa hiện tượng rò rỉ bộ nhớ?',
+      en: 'How does the Garbage Collection mechanism automatically reclaim unreferenced memory to effectively prevent memory leaks in .NET applications?',
       vocab: [
         { word: 'Garbage Collection', meaning: 'bộ thu gom rác bộ nhớ', type: 'Technical Term' },
-        { word: 'reclaims memory', meaning: 'thu hồi/giải phóng bộ nhớ', type: 'Collocation' },
+        { word: 'unreferenced memory', meaning: 'bộ nhớ không còn tham chiếu', type: 'Technical Phrase' },
         { word: 'memory leaks', meaning: 'rò rỉ bộ nhớ', type: 'Technical Term' }
       ],
-      grammar: ['Cụm trạng từ bổ nghĩa: "automatically reclaims..."', 'Mệnh đề chỉ mục đích: "to effectively prevent..."'],
+      grammar: ['Wh-question: "How does ... automatically reclaim ...?"', 'Mệnh đề chỉ mục đích: "to effectively prevent..."'],
       band: 8.0
     },
     {
-      vi: 'Lập trình bất đồng bộ với async và await cho phép ứng dụng xử lý các tác vụ truy xuất dữ liệu mà không làm nghẽn luồng xử lý giao diện người dùng.',
-      en: 'Asynchronous programming utilizing async and await enables applications to execute data retrieval tasks without blocking the primary user interface thread.',
+      vi: 'Lập trình bất đồng bộ với async và await giúp ứng dụng thực thi các tác vụ dữ liệu mà không làm nghẽn luồng xử lý giao diện như thế nào?',
+      en: 'How does asynchronous programming utilizing async and await enable applications to execute data retrieval tasks without blocking the primary thread?',
       vocab: [
         { word: 'Asynchronous programming', meaning: 'lập trình bất đồng bộ', type: 'Technical Term' },
         { word: 'data retrieval tasks', meaning: 'các tác vụ truy xuất dữ liệu', type: 'Noun phrase' },
         { word: 'blocking the primary thread', meaning: 'làm nghẽn luồng xử lý chính', type: 'Collocation' }
       ],
-      grammar: ['Cụm phân từ bổ nghĩa: "utilizing async and await"', 'Cấu trúc: "enable someone to do something"'],
-      band: 8.5
-    },
-    {
-      vi: 'Kiến trúc Microservices tạo điều kiện cho các đội ngũ phát triển mở rộng từng dịch vụ độc lập và triển khai phần mềm liên tục.',
-      en: 'A microservices architecture facilitates independent service scalability and empowers multidisciplinary engineering teams to maintain continuous software deployment pipelines.',
-      vocab: [
-        { word: 'microservices architecture', meaning: 'kiến trúc vi dịch vụ', type: 'Technical Term' },
-        { word: 'scalability', meaning: 'khả năng mở rộng quy mô', type: 'Noun' },
-        { word: 'continuous software deployment', meaning: 'triển khai phần mềm liên tục', type: 'Collocation' }
-      ],
-      grammar: ['Cấu trúc: "facilitate something and empower someone to do something"'],
+      grammar: ['Cụm phân từ bổ nghĩa: "utilizing async and await"', 'Giới từ theo sau bởi V-ing: "without blocking"'],
       band: 8.0
     },
     {
-      vi: 'Việc áp dụng chiến lược lưu bộ nhớ đệm thông minh có thể cắt giảm đáng kể độ trễ phản hồi từ cơ sở dữ liệu khi lưu lượng truy cập tăng vọt.',
-      en: 'Implementing sophisticated distributed caching strategies can drastically diminish database query latency during unexpected spikes in concurrent user traffic.',
+      vi: 'Sự khác biệt cốt lõi giữa Interface và Abstract Class trong lập trình C# hướng đối tượng là gì?',
+      en: 'What is the fundamental distinction between an Interface and an Abstract Class in C# object-oriented programming?',
+      vocab: [
+        { word: 'fundamental distinction', meaning: 'sự khác biệt cốt lõi', type: 'Academic Collocation' },
+        { word: 'Abstract Class', meaning: 'lớp trừu tượng', type: 'OOP Concept' },
+        { word: 'object-oriented programming', meaning: 'lập trình hướng đối tượng (OOP)', type: 'Technical Term' }
+      ],
+      grammar: ['Wh-question với What', 'Cụm giới từ đối sánh: "between A and B"'],
+      band: 7.5
+    },
+    {
+      vi: 'Làm thế nào để bạn chẩn đoán và khắc phục các điểm nghẽn hiệu năng khi truy vấn dữ liệu lớn với Entity Framework Core?',
+      en: 'How do you diagnose and resolve performance bottlenecks when querying large datasets using Entity Framework Core?',
+      vocab: [
+        { word: 'performance bottlenecks', meaning: 'các điểm nghẽn hiệu năng', type: 'Collocation' },
+        { word: 'querying large datasets', meaning: 'truy vấn các tập dữ liệu lớn', type: 'Collocation' },
+        { word: 'Entity Framework Core', meaning: 'framework ORM của .NET', type: 'Technical Term' }
+      ],
+      grammar: ['Wh-question: "How do you diagnose and resolve...?"', 'Cụm phân từ chỉ phương tiện: "using Entity Framework Core"'],
+      band: 8.0
+    },
+    {
+      vi: 'Sự khác biệt then chốt giữa IEnumerable và IQueryable khi thực thi truy vấn dữ liệu phía máy chủ trong .NET là gì?',
+      en: 'What is the key difference between IEnumerable and IQueryable regarding server-side query execution in .NET?',
+      vocab: [
+        { word: 'key difference', meaning: 'sự khác biệt then chốt', type: 'Collocation' },
+        { word: 'server-side query execution', meaning: 'thực thi truy vấn phía máy chủ', type: 'Technical Phrase' },
+        { word: 'IQueryable', meaning: 'interface truy vấn dữ liệu tối ưu', type: 'Technical Term' }
+      ],
+      grammar: ['Cụm giới từ: "regarding server-side..."', 'Wh-question'],
+      band: 8.0
+    },
+    {
+      vi: 'Cơ chế Middleware pipeline trong ASP.NET Core xử lý các yêu cầu HTTP gửi đến và các phản hồi gửi đi như thế nào?',
+      en: 'How does the Middleware pipeline in ASP.NET Core process incoming HTTP requests and outgoing HTTP responses?',
+      vocab: [
+        { word: 'Middleware pipeline', meaning: 'đường ống xử lý middleware', type: 'Technical Term' },
+        { word: 'incoming HTTP requests', meaning: 'các yêu cầu HTTP gửi đến', type: 'Technical Phrase' },
+        { word: 'outgoing responses', meaning: 'các phản hồi gửi đi', type: 'Collocation' }
+      ],
+      grammar: ['Hiện tại đơn hỏi quy trình kiến trúc: "How does ... process ...?"'],
+      band: 8.0
+    },
+    {
+      vi: 'Tại sao việc triển khai interface IDisposable và sử dụng câu lệnh using lại quan trọng trong việc giải phóng tài nguyên hệ điều hành unmanaged?',
+      en: 'Why is implementing the IDisposable interface and utilizing the using statement vital for releasing unmanaged operating system resources?',
+      vocab: [
+        { word: 'IDisposable interface', meaning: 'giao diện giải phóng tài nguyên', type: 'Technical Term' },
+        { word: 'unmanaged resources', meaning: 'tài nguyên không được quản lý tự động', type: 'Technical Term' },
+        { word: 'vital for', meaning: 'tối quan trọng cho', type: 'Collocation' }
+      ],
+      grammar: ['Wh-question: "Why is ... vital for + V-ing?"', 'Danh động từ làm bổ ngữ'],
+      band: 8.5
+    },
+    {
+      vi: 'Làm thế nào để áp dụng chiến lược lưu cache phân tán với Redis nhằm giảm độ trễ truy vấn cơ sở dữ liệu khi lưu lượng truy cập tăng vọt?',
+      en: 'How can you implement distributed caching solutions such as Redis to dramatically diminish database latency during unexpected traffic spikes?',
       vocab: [
         { word: 'distributed caching', meaning: 'bộ nhớ đệm phân tán', type: 'Technical Term' },
-        { word: 'query latency', meaning: 'độ trễ của truy vấn', type: 'Technical Term' },
-        { word: 'concurrent user traffic', meaning: 'lưu lượng người dùng đồng thời', type: 'Collocation' }
+        { word: 'diminish database latency', meaning: 'giảm độ trễ cơ sở dữ liệu', type: 'Collocation' },
+        { word: 'traffic spikes', meaning: 'lưu lượng truy cập tăng vọt đột ngột', type: 'Collocation' }
       ],
-      grammar: ['Danh động từ làm chủ ngữ: "Implementing..."', 'Modal verb chỉ tiềm năng: "can drastically diminish"'],
+      grammar: ['Modal question: "How can you implement...?"', 'Mệnh đề chỉ mục đích: "to dramatically diminish..."'],
       band: 8.5
     },
     {
-      vi: 'Các nguyên lý lập trình hướng đối tượng như tính đóng gói và tính đa hình giúp thúc đẩy khả năng tái sử dụng mã nguồn và bảo trì lâu dài.',
-      en: 'Fundamental object-oriented principles such as encapsulation and polymorphism foster extensive code reusability and simplify long-term software maintainability.',
+      vi: 'Bạn hãy đánh giá những ưu điểm kiến trúc và thách thức vận hành khi chuyển đổi từ Monolith sang Microservices trong .NET?',
+      en: 'Can you evaluate the architectural advantages and operational challenges of migrating from a Monolith to Microservices in .NET?',
       vocab: [
-        { word: 'encapsulation', meaning: 'tính đóng gói dữ liệu', type: 'OOP Concept' },
-        { word: 'polymorphism', meaning: 'tính đa hình', type: 'OOP Concept' },
-        { word: 'code reusability', meaning: 'khả năng tái sử dụng mã nguồn', type: 'Collocation' }
+        { word: 'architectural advantages', meaning: 'lợi thế về mặt kiến trúc', type: 'Collocation' },
+        { word: 'operational challenges', meaning: 'thách thức trong vận hành', type: 'Collocation' },
+        { word: 'migrating from Monolith', meaning: 'chuyển đổi từ hệ thống nguyên khối', type: 'Technical Phrase' }
       ],
-      grammar: ['Cấu trúc đưa ví dụ: "such as..."', 'Động từ song hành: "foster ... and simplify ..."'],
-      band: 8.0
-    },
-    {
-      vi: 'Quy trình tích hợp liên tục tự động giúp phát hiện kịp thời các lỗi hồi quy trước khi sản phẩm được phát hành tới tay khách hàng.',
-      en: 'Automated continuous integration workflows facilitate the prompt detection of software regressions well before artifacts are released into production environments.',
-      vocab: [
-        { word: 'continuous integration', meaning: 'tích hợp liên tục (CI)', type: 'DevOps Term' },
-        { word: 'software regressions', meaning: 'lỗi hồi quy phần mềm', type: 'Collocation' },
-        { word: 'production environments', meaning: 'môi trường thực tế (production)', type: 'Technical Term' }
-      ],
-      grammar: ['Mệnh đề thời gian: "well before artifacts are released..."', 'Dạng bị động: "are released"'],
-      band: 8.5
-    },
-    {
-      vi: 'Đánh chỉ mục cơ sở dữ liệu giúp tăng tốc độ tìm kiếm nhưng lại làm phát sinh chi phí dung lượng lưu trữ và làm chậm thao tác ghi dữ liệu.',
-      en: 'Database indexing significantly accelerates record retrieval speeds, though it incurs additional storage overhead and slightly degrades data write throughput.',
-      vocab: [
-        { word: 'indexing', meaning: 'đánh chỉ mục dữ liệu', type: 'Database Term' },
-        { word: 'storage overhead', meaning: 'phụ phí dung lượng lưu trữ', type: 'Noun phrase' },
-        { word: 'write throughput', meaning: 'thông lượng ghi dữ liệu', type: 'Technical Term' }
-      ],
-      grammar: ['Liên từ nhượng bộ: "though it incurs..."', 'Từ vựng chuyên ngành cơ sở dữ liệu chính xác'],
-      band: 8.0
-    },
-    {
-      vi: 'Tái cấu trúc mã nguồn thường xuyên là biện pháp hiệu quả nhằm xóa bỏ nợ kỹ thuật mà không làm biến đổi hành vi bên ngoài của hệ thống.',
-      en: 'Systematic code refactoring serves as an effective mechanism to eliminate technical debt without modifying the observable external behavior of the application.',
-      vocab: [
-        { word: 'code refactoring', meaning: 'tái cấu trúc mã nguồn', type: 'Software Term' },
-        { word: 'technical debt', meaning: 'nợ kỹ thuật', type: 'Collocation' },
-        { word: 'observable external behavior', meaning: 'hành vi bên ngoài quan sát được', type: 'Noun phrase' }
-      ],
-      grammar: ['Cụm thành ngữ học thuật: "serves as an effective mechanism to..."', 'Giới từ "without" + V-ing'],
-      band: 8.5
-    },
-    {
-      vi: 'Công nghệ đóng gói container đảm bảo phần mềm chạy ổn định và đồng nhất trên mọi môi trường phát triển và máy chủ đám mây.',
-      en: 'Containerization technology guarantees that software applications execute with predictable consistency across divergent operating systems and cloud computing platforms.',
-      vocab: [
-        { word: 'Containerization', meaning: 'công nghệ container hóa (Docker)', type: 'Technical Term' },
-        { word: 'predictable consistency', meaning: 'tính nhất quán có thể dự đoán được', type: 'Collocation' },
-        { word: 'divergent operating systems', meaning: 'các hệ điều hành khác biệt nhau', type: 'Noun phrase' }
-      ],
-      grammar: ['Mệnh đề danh ngữ: "guarantees that..."', 'Tính từ học thuật: "divergent"'],
+      grammar: ['Cấu trúc câu hỏi phỏng vấn: "Can you evaluate...?"', 'Giới từ theo sau bởi danh động từ: "of migrating from..."'],
       band: 8.5
     }
   ],
@@ -1136,17 +1136,35 @@ async function generateWithGemini(options: GenerationOptions): Promise<ExerciseI
   const band = options.band || 7.5;
   const count = options.sentenceCount || 3;
 
-  const prompt = `Bạn là chuyên gia khảo thí IELTS Writing Task 2 hàng đầu. Hãy tạo một bộ bài tập luyện dịch câu tiếng Việt sang tiếng Anh chuẩn phong cách học thuật IELTS.
+  // Detect if user is asking for questions, interview questions, or Q&A
+  const isQuestionRequest = /câu\s*hỏi|phỏng\s*vấn|interview|question|q&a|hỏi\s*đáp|đố|test/i.test(topicPrompt);
+
+  const genreGuideline = isQuestionRequest
+    ? `BẠN LÀ CHUYÊN GIA PHỎNG VẤN TUYỂN DỤNG KỸ THUẬT VÀ KHẢO THÍ TIẾNG ANH CHUYÊN NGÀNH HÀNG ĐẦU.
+Người dùng yêu cầu cụ thể: Tạo "CÂU HỎI PHỎNG VẤN" (Interview Questions) theo chủ đề: "${topicPrompt}".
+
+QUY TẮC BẮT BUỘC VỀ DẠNG CÂU:
+1. TẤT CẢ các câu tiếng Việt và câu tiếng Anh BẮT BUỘC PHẢI Ở DẠNG CÂU HỎI PHỎNG VẤN TRỰC TIẾP (kết thúc bằng dấu chấm hỏi '?').
+2. TUYỆT ĐỐI KHÔNG sinh ra câu khẳng định, câu trần thuật hay đoạn văn nghị luận kiểu IELTS Task 2! Mỗi câu phải là một câu hỏi mà người phỏng vấn / nhà tuyển dụng trực tiếp hỏi ứng viên!
+3. Ví dụ câu hỏi mẫu chuẩn:
+   - "Bạn có thể giải thích sự khác biệt cốt lõi giữa Interface và Abstract Class trong C# không?" -> "Can you explain the fundamental distinction between an Interface and an Abstract Class in C#?"
+   - "Cơ chế Garbage Collection trong .NET hoạt động như thế nào để ngăn ngừa rò rỉ bộ nhớ?" -> "How does the Garbage Collection mechanism automatically reclaim unreferenced memory in .NET applications?"
+   - "Làm thế nào để bạn chẩn đoán và khắc phục điểm nghẽn hiệu năng khi truy vấn dữ liệu lớn với Entity Framework?" -> "How do you diagnose and resolve performance bottlenecks when querying large datasets using Entity Framework Core?"
+4. Nội dung câu hỏi phải chuyên sâu, tập trung đúng vào kỹ thuật/chuyên môn được yêu cầu.`
+    : `BẠN LÀ CHUYÊN GIA BIÊN SOẠN ĐỀ THI TIẾNG ANH CHUYÊN NGÀNH VÀ IELTS HỌC THUẬT HÀNG ĐẦU.
+Chủ đề: "${topicPrompt}". Hãy tạo các câu luyện dịch chuẩn mực, đi thẳng vào nội dung chuyên đề mà người dùng yêu cầu.`;
+
+  const prompt = `${genreGuideline}
 
 Yêu cầu cụ thể:
-1. Chủ đề: "${topicPrompt}" (Topic in English: "${options.topic}")
-2. Mục tiêu band điểm: Band ${band}
+1. Chủ đề & Thể loại: "${topicPrompt}". ${isQuestionRequest ? 'BẮT BUỘC 100% CÁC CÂU LÀ CÂU HỎI PHỎNG VẤN THỰC TẾ (dạng câu hỏi kết thúc bằng dấu ?)' : 'Câu luyện dịch chuẩn xác.'}
+2. Mục tiêu band điểm/trình độ: Band ${band}
 3. Số lượng câu: ĐÚNG CHÍNH XÁC ${count} CÂU (từ câu 1 đến câu ${count}). QUAN TRỌNG: Bạn BẮT BUỘC phải tạo ĐỦ CHÍNH XÁC ${count} phần tử trong mảng JSON, tuyệt đối không được bớt hay thiếu câu!
-4. Câu tiếng Việt: Đi thẳng trực tiếp vào nội dung chuyên đề cần dịch, TUYỆT ĐỐI KHÔNG thêm lời dẫn dắt hay tiền tố như 'Liên quan đến chủ đề...', 'Chủ đề: ...'. Câu tiếng Việt và câu tiếng Anh phải tương đương chính xác từng ý một!
-5. Câu tiếng Anh mẫu: Chuẩn xác tuyệt đối, cấu trúc câu tinh tế (inversion, participle clauses, passive voice, nominalization, advanced collocations) tương ứng chính xác với Band ${band}.
-6. Danh sách từ vựng gợi ý (vocabHints): 3-5 từ/cụm từ then chốt với nghĩa tiếng Việt và loại từ.
-7. Ghi chú ngữ pháp (grammarNotes): 2-3 điểm ngữ pháp quan trọng trong câu.
-8. Các phiên bản thay thế (alternativeAnswers): 1 phiên bản band thấp hơn (khoảng Band 6.5) và 1 phiên bản band cao cấp (Band 8.5+).
+4. Câu tiếng Việt: Đi thẳng trực tiếp vào nội dung câu cần dịch (TUYỆT ĐỐI KHÔNG thêm lời dẫn dắt hay tiền tố như 'Liên quan đến...', 'Chủ đề: ...').
+5. Câu tiếng Anh mẫu: Chuẩn xác tuyệt đối, cấu trúc câu tinh tế (inversion, passive voice, nominalization, collocations kỹ thuật chuẩn xác) tương ứng chính xác với Band ${band}.
+6. Danh sách từ vựng gợi ý (vocabHints): 3-5 từ/thuật ngữ then chốt với nghĩa tiếng Việt và loại từ.
+7. Ghi chú ngữ pháp (grammarNotes): 2-3 điểm ngữ pháp/cấu trúc câu quan trọng trong câu.
+8. Các phiên bản thay thế (alternativeAnswers): 1 phiên bản đơn giản hơn (khoảng Band 6.0 - 6.5) và 1 phiên bản nâng cao (Band 8.0 - 8.5+).
 
 QUAN TRỌNG: Bạn BẮT BUỘC phải trả về kết quả là một JSON ARRAY hợp lệ duy nhất chứa ĐỦ CHÍNH XÁC ${count} đối tượng bài tập, KHÔNG có văn bản giải thích thừa ngoài JSON:
 [
